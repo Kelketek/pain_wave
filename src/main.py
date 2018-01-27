@@ -8,7 +8,7 @@ import sys
 from src.entity import Entity
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
-from src.friction import update_friction
+from src.friction import update_friction, Friction
 
 
 def get_joysticks():
@@ -89,6 +89,7 @@ class PainWave:
             entity.add(Position(random() * 250, random() * 250, random() * 12 + 8))
             entity.add(Movement())
             entity.add(Collision(random() * 10 + 40))
+            entity.add(Friction(.9))
 
     @property
     def players(self):
@@ -103,6 +104,7 @@ class PainWave:
                 entity.add(position)
                 entity.add(Movement())
                 entity.add(Collision(10))
+                entity.add(Friction(.95))
                 entity.add(Image("assets/ball.gif", position))
                 self.offset += 2
                 # self.player_dict[joystick] = self.ball.get_rect()
