@@ -1,4 +1,4 @@
-from src.hardware import Controller
+from .hardware import Controller
 from .entity import entities_with
 from .physics import distance, Movement, Position, Collision, entity_distance, entity_gap
 
@@ -36,7 +36,7 @@ def update_grapple(entities):
         controller = entity.get(Controller)
         if controller is None:
             continue
-        if controller.joystick.get_button(5):
+        if controller.joystick.get_button(11):
             if entity.get(Drag) is None:
                 nearest = nearest_to(entities, entity)
                 if entity_gap(entity, nearest) < 1:

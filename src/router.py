@@ -35,8 +35,8 @@ def update_routers(entities):
             if entity_overlap(entity, other) > 0:
                 # TODO: Need facing module
                 movement = other.get(Movement)
-                movement.vx = .1
-                movement.vy = .4
+                movement.vx = 2
+                movement.vy = 2
 
 
 

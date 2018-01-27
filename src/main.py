@@ -26,7 +26,6 @@ class PainWave:
         pygame.mouse.set_visible(0)
         self.size = self.width, self.height = width, height
         self.playtime = 0.0
-        self.offset = 0
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
         self.entities = []
 
@@ -38,16 +37,32 @@ class PainWave:
             entity.add(Collision(random() * 10 + 40))
             entity.add(Friction(.9))
 
+        for _ in range(7):
+            entity = Entity()
+            self.entities.append(entity)
+            # entity.add(Position(random() * 250 + 100, random() * 250 + 100, random() * 10 + 8))
+            # entity.add(Movement())
+            # entity.add(Collision(random() * 100 + 70))
+            # entity.add(Friction(.9))
+
+            entity.add(Position(random() * 250 + 100, random() * 250 + 100, random() * 8 + 6))
+            entity.add(Movement())
+            entity.add(Collision(50))
+            entity.add(Friction(.9))
+            entity.add(Router())
+
+
         self.init_players()
         self.init_environment()
 
     def init_players(self):
+        offset = 0
         for joystick in range(pygame.joystick.get_count()):
             joystick = pygame.joystick.Joystick(joystick)
             joystick.init()
             entity = Entity()
             self.entities.append(entity)
-            position = Position(110, 110 + self.offset, 8)
+            position = Position(110, 110 + offset, 8)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
@@ -55,7 +70,7 @@ class PainWave:
             entity.add(Image("assets/ball.gif", position))
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
-            self.offset += 2
+            offset += 2
 
     def init_environment(self):
         cannon = Entity(name='Death Wave Transmitter')
