@@ -24,7 +24,19 @@ def distance(x1, y1, x2, y2):
     dx = x1 - x2
     dy = y1 - y2
     return sqrt(dx * dx + dy * dy)
-    
+
+
+def entity_distance(entity_a, entity_b):
+    a = entity_a.expect(Position)
+    b = entity_b.expect(Position)
+    return distance(a.x, a.y, b.x, b.y)
+
+
+def entity_gap(entity_a, entity_b):
+    a = entity_a.expect(Position)
+    b = entity_b.expect(Position)
+    return distance(a.x, a.y, b.x, b.y) - a.radius - b.radius
+
 
 def entity_overlap(entity_a, entity_b):
     a = entity_a.expect(Position)

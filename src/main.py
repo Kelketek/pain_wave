@@ -1,7 +1,6 @@
 # PLAY US A GAME! :V
 from math import floor
 from random import random
-
 import pygame
 import sys
 
@@ -9,11 +8,8 @@ from src.entity import Entity
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
 from src.friction import update_friction, Friction
-from src.grapple import Grapple, update_grapple
-
-
-def get_joysticks():
-    return [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+from src.grapple import update_grapple, CanGrapple
+from src.controller import Controller
 
 
 DEAD_ZONE = .1
@@ -59,16 +55,12 @@ class Image:
 
     def blit(self, screen):
         rect = (
-            floor(self.position.x - self.position.radius), floor(self.position.y - self.position.radius),
-            floor(self.position.x + self.position.radius), floor(self.position.y - self.position.radius)
+            floor(self.position.x - self.position.radius),
+            floor(self.position.y - self.position.radius),
+            floor(self.position.x + self.position.radius),
+            floor(self.position.y - self.position.radius)
         )
         screen.blit(self.image, rect)
-
-
-class Controller:
-    def __init__(self, joystick):
-        self.joystick = joystick
-        self.moved = False
 
 
 class PainWave:
@@ -82,7 +74,6 @@ class PainWave:
         self.offset = 0
         self.moved = False
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
-        pygame.joystick.init()
         self.entities = []
 
         for _ in range(10):
@@ -106,12 +97,12 @@ class PainWave:
             entity.add(Movement())
             entity.add(Collision(10))
             entity.add(Friction(.95))
-            entity.add(Grapple(self.entities[0]))
             entity.add(Image("assets/ball.gif", position))
             entity.add(Controller(joystick))
+            entity.add(CanGrapple())
             self.offset += 2
 
-    def move_object(self, entity, movement):
+    def accelerate_object(self, entity, movement):
         target = entity.get(Movement)
         target.vx += movement[0] / 100.0
         target.vy += movement[1] / 100.0
@@ -139,7 +130,7 @@ class PainWave:
         for entity in self.entities:
             controller = entity.get(Controller)
             if controller:
-                self.move_object(entity, self.get_movement(controller))
+                self.accelerate_object(entity, self.get_movement(controller))
 
     def main_loop(self):
         while True:
@@ -152,6 +143,8 @@ class PainWave:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+                # if event.type == pygame.JOYBUTTONDOWN:
+                #     print(repr(event.button))
 
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_ESCAPE]:

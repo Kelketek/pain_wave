@@ -20,6 +20,8 @@ class Entity(object):
             raise TypeError('Entity already has component of that type')
         self.components.append(comp)
 
+    def remove_type(self, kind):
+        self.components = [comp for comp in self.components if type(comp) != kind]
 
 def components_typed(entities, kind):
     for entity in entities:
