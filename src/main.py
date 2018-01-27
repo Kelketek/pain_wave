@@ -1,5 +1,7 @@
 import pygame
 
+import physics
+
 pygame.init()
 pygame.display.set_mode((400, 400))
 
