@@ -9,7 +9,7 @@ NOT_QUITE_BLACK = 22, 22, 22
 
 
 class Image:
-    def __init__(self, path, entity, depth=0):
+    def __init__(self, path, entity):
         position = entity.get(Position)
         self.image = pygame.transform.scale(
             pygame.image.load(path),
