@@ -1,12 +1,11 @@
 # PLAY US A GAME! :V
-from math import floor
 from random import random
 import pygame
 import sys
 
 from src.entity import Entity
 from src.hardware import Controller, update_input
-from src.logic import Transmitter, Timer, update_triggers, update_timers
+from src.logic import Timer, update_triggers, update_timers
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
 from src.friction import update_friction, Friction
@@ -14,29 +13,12 @@ from src.grapple import update_grapple, CanGrapple
 
 
 # Desired framerate in frames per second. Try out other values.
+from src.video import Image, update_screen
+from src.violence import Transmitter
+
 FPS = 30
 
 BLACK = 0, 0, 0
-NOT_QUITE_BLACK = 22, 22, 22
-RED = 255, 0, 0
-
-
-class Image:
-    def __init__(self, path, position, depth=0):
-        self.image = pygame.transform.scale(
-            pygame.image.load(path),
-            (floor(position.radius * 2), floor(position.radius * 2))
-        )
-        self.position = position
-
-    def blit(self, screen):
-        rect = (
-            floor(self.position.x - self.position.radius),
-            floor(self.position.y - self.position.radius),
-            floor(self.position.x + self.position.radius),
-            floor(self.position.y - self.position.radius)
-        )
-        screen.blit(self.image, rect)
 
 
 class PainWave:
@@ -88,24 +70,6 @@ class PainWave:
         cannon.add(Timer(5, self.playtime, tasks=[emitter.create_projectile]))
         self.entities.append(cannon)
 
-    def render(self):
-        self.screen.fill(NOT_QUITE_BLACK)
-        for entity in self.entities:
-            image = entity.get(Image)
-            if image:
-                image.blit(self.screen)
-            else:
-                position = entity.get(Position)
-                pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
-
-        pygame.display.flip()
-
-    def poll_controllers(self):
-        for entity in self.entities:
-            controller = entity.get(Controller)
-            if controller:
-                self.accelerate_object(entity, self.get_movement(controller))
-
     def main_loop(self):
         while True:
             milliseconds = self.clock.tick(FPS)
@@ -132,4 +96,4 @@ class PainWave:
             update_friction(self.entities)
             update_collisions(self.entities)
             update_grapple(self.entities)
-            self.render()
+            update_screen(self.entities, self.screen)
