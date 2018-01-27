@@ -21,23 +21,11 @@ def distance(x1, y1, x2, y2):
     dy = y1 - y2
     return sqrt(dx * dx + dy * dy)
 
-# def entity_distance(entity_a, entity_b):
-#     a = entity_a.expect(Position)
-#     b = entity_b.expect(Position)
-#     return distance(a.x, a.y, b.x, b.y)
-
 def entity_overlap(entity_a, entity_b):
     a = entity_a.expect(Position)
     b = entity_b.expect(Position)
     cdistance = distance(a.x, a.y, b.x, b.y)
     return a.radius + other.radius - cdistance
-
-# def entity_overlap_vector(entity_a, entity_b):
-#     a = entity_a.expect(Position)
-#     b = entity_b.expect(Position)
-#     cdistance = distance(a.x, a.y, b.x, b.y)
-#     magnitude = a.radius + b.radius - cdistance
-
 
 def update_movement(entities):
     for entity in entities_with(entities, Movement):
@@ -55,8 +43,6 @@ def update_collisions(entities):
         for other in active:
             if other == entity:
                 continue
-            # cdist = entity_distance(entity, other)
-            # overlap = entity.radius + other.radius - cdist
             overlap = entity_overlap(entity, other)
             if overlap > 0:
                 movement = entity.get(Movement)
@@ -64,29 +50,8 @@ def update_collisions(entities):
                 position_a = entity.get(Position)
                 position_b = entity.get(Position)
 
-                movement.vx += abs(position_a.x - position_b.y) / mass / 10.0
-                movement.vy += abs(position_b.x - position_b.y) / mass / 10.0
-
-                # entity.vx += abs(entity.x - other.x) / entity.mass / 10
-                # entity.vy += abs(entity.y - other.y) / entity.mass / 10
-
-
-
-# def update(entities):
-#     for entity in components_typed(entities, Physics):
-#         entity.x += entity.vx
-#         entity.y += entity.vy
-#
-#         if entity.mass is None:
-#             continue
-#         for other in entities:
-#             if other == entity or other.mass is None:
-#                 continue
-#             cdist = entity_distance(entity, other)
-#             overlap = entity.radius + other.radius - cdist
-#             if overlap > 0:
-#                 entity.vx += abs(entity.x - other.x) / entity.mass / 10
-#                 entity.vy += abs(entity.y - other.y) / entity.mass / 10
+                movement.vx += abs(position_a.x - position_b.x) / mass / 10.0
+                movement.vy += abs(position_b.y - position_b.y) / mass / 10.0
 
 def random_entity():
     from random import random
