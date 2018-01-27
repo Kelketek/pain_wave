@@ -20,11 +20,13 @@ class Entity(object):
             raise TypeError('Entity already has component of that type')
         self.components.append(comp)
 
+
 def components_typed(entities, kind):
     for entity in entities:
         comp = entity.get(kind)
         if comp is not None:
             yield comp
+
 
 def entities_with(entities, kind):
     for entity in entities:

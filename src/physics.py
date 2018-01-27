@@ -1,5 +1,6 @@
 from math import sqrt
-from entity import entities_with
+from .entity import entities_with
+
 
 class Position:
     def __init__(self, x, y, radius):
@@ -7,25 +8,30 @@ class Position:
         self.y = float(y)
         self.radius = float(radius)
 
+
 class Movement:
     def __init__(self):
         self.vx = 0.0
         self.vy = 0.0
 
+
 class Collision:
     def __init__(self, mass):
         self.mass = float(mass)
+
 
 def distance(x1, y1, x2, y2):
     dx = x1 - x2
     dy = y1 - y2
     return sqrt(dx * dx + dy * dy)
 
+
 def entity_overlap(entity_a, entity_b):
     a = entity_a.expect(Position)
     b = entity_b.expect(Position)
     cdistance = distance(a.x, a.y, b.x, b.y)
-    return a.radius + other.radius - cdistance
+    return a.radius + b.radius - cdistance
+
 
 def update_movement(entities):
     for entity in entities_with(entities, Movement):
@@ -34,6 +40,7 @@ def update_movement(entities):
 
         position.x += movement.vx
         position.y += movement.vy
+
 
 def update_collisions(entities):
     active = entities_with(entities, Position)
@@ -50,8 +57,9 @@ def update_collisions(entities):
                 position_a = entity.get(Position)
                 position_b = entity.get(Position)
 
-                movement.vx += abs(position_a.x - position_b.x) / mass / 10.0
-                movement.vy += abs(position_b.y - position_b.y) / mass / 10.0
+                movement.vx += abs(position_a.x - position_b.x) / mass * 10.0
+                movement.vy += abs(position_b.y - position_b.y) / mass * 10.0
+
 
 def random_entity():
     from random import random
@@ -62,6 +70,7 @@ def random_entity():
     result = Entity()
     entity.add(Position(random() * 10, random() * 10))
     return result
+
 
 ### testing ###
 if __name__ == '__main__':

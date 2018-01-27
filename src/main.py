@@ -4,6 +4,9 @@ from math import floor
 import pygame
 import sys
 
+from src.entity import Entity
+from src.physics import Position, Movement, update_movement, update_collisions, Collision
+
 
 def get_joysticks():
     return [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -35,6 +38,15 @@ DIRECT_MAP = {
 FPS = 30
 
 BLACK = 0, 0, 0
+RED = 255, 0, 0
+
+
+class Image:
+    def __init__(self, source):
+        self.image = pygame.image.load("assets/ball.gif")
+
+    def blit(self, screen, position):
+        pass
 
 
 class PainWave:
@@ -45,12 +57,14 @@ class PainWave:
         pygame.mouse.set_visible(0)
         self.size = self.width, self.height = width, height
         self.playtime = 0.0
+        self.offset = 0
         self.moved = False
 
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
         self.ball = pygame.image.load("assets/ball.gif")
         self.ball_rect = self.ball.get_rect()
         pygame.joystick.init()
+        self.entities = []
         self.joystick_list = []
         self.player_dict = {}
 
@@ -60,7 +74,14 @@ class PainWave:
             return self.player_dict
         for joystick in self.joysticks:
             if joystick not in self.player_dict:
-                self.player_dict[joystick] = self.ball.get_rect()
+                entity = Entity()
+                self.player_dict[joystick] = entity
+                self.entities.append(entity)
+                entity.add(Position(0, 0 + self.offset, 6))
+                entity.add(Movement())
+                entity.add(Collision(10))
+                self.offset += 2
+                # self.player_dict[joystick] = self.ball.get_rect()
         return self.player_dict
 
     @property
@@ -75,19 +96,24 @@ class PainWave:
     def get_movement(self, joystick):
         right_thumbstick_x = normalize_axis(joystick.get_axis(2))
         right_thumbstick_y = normalize_axis(joystick.get_axis(3))
+        if right_thumbstick_x or right_thumbstick_y:
+            self.moved = True
         return [right_thumbstick_x, right_thumbstick_y]
 
-    def move_object(self, obj_rect, movement):
-        obj_rect = obj_rect.move(movement)
-        if obj_rect.left < 0:
-            obj_rect = obj_rect.move([-obj_rect.left, 0])
-        if obj_rect.right > self.width:
-            obj_rect = obj_rect.move([(self.width - obj_rect.right), 0])
-        if obj_rect.top < 0:
-            obj_rect = obj_rect.move([0, -obj_rect.top])
-        if obj_rect.bottom > self.height:
-            obj_rect = obj_rect.move([0, (self.height - obj_rect.bottom)])
-        return obj_rect
+    def move_object(self, entity, movement):
+        target = entity.get(Movement)
+        # target.vx += movement[0]
+        # target.vy += movement[1]
+
+    def render(self):
+        self.screen.fill(BLACK)
+        update_movement(self.entities)
+        update_collisions(self.entities)
+        for entity in self.entities:
+            position = entity.get(Position)
+            pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
+
+        pygame.display.flip()
 
     def main_loop(self):
         while True:
@@ -104,12 +130,6 @@ class PainWave:
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_ESCAPE]:
                 break
-
-            self.screen.fill(BLACK)
             for joystick in self.players.keys():
-                self.players[joystick] = self.move_object(self.players[joystick], self.get_movement(joystick))
-                self.screen.blit(self.ball, self.players[joystick])
-
-            text = "FPS: {0:.2f}  Playtime: {1:.2f}".format(self.clock.get_fps(), self.playtime)
-            pygame.display.set_caption(text)
-            pygame.display.flip()
+                self.move_object(self.players[joystick], self.get_movement(joystick))
+            self.render()
