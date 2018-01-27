@@ -6,39 +6,12 @@ import pygame
 import sys
 
 from src.entity import Entity
+from src.hardware import Controller, update_input
+from src.logic import Emitter, Timer, update_triggers, update_timers
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
 from src.friction import update_friction
 
-
-def get_joysticks():
-    return [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-
-
-DEAD_ZONE = .1
-
-
-def normalize_axis(value):
-    if 0 < value < DEAD_ZONE:
-        value = 0
-    if DEAD_ZONE > value > 0:
-        value = 0
-    if value:
-        if value > 0:
-            value -= DEAD_ZONE
-        else:
-            value += DEAD_ZONE
-    value *= 100
-    value /= 15
-    return floor(value)
-
-
-DIRECT_MAP = {
-    pygame.K_w: (0, -3),
-    pygame.K_a: (-3, 0),
-    pygame.K_s: (0, 3),
-    pygame.K_d: (3, 0)
-}
 
 # Desired framerate in frames per second. Try out other values.
 FPS = 30
@@ -64,12 +37,6 @@ class Image:
         screen.blit(self.image, rect)
 
 
-class Controller:
-    def __init__(self, joystick):
-        self.joystick = joystick
-        self.moved = False
-
-
 class PainWave:
     def __init__(self, width=600, height=600):
         pygame.init()
@@ -92,6 +59,7 @@ class PainWave:
             entity.add(Collision(random() * 10 + 40))
 
         self.init_players()
+        self.init_environment()
 
     def init_players(self):
         for joystick in range(pygame.joystick.get_count()):
@@ -107,17 +75,14 @@ class PainWave:
             entity.add(Controller(joystick))
             self.offset += 2
 
-    def move_object(self, entity, movement):
-        target = entity.get(Movement)
-        target.vx += movement[0] / 100.0
-        target.vy += movement[1] / 100.0
-
-    def get_movement(self, controller):
-        right_thumbstick_x = normalize_axis(controller.joystick.get_axis(2))
-        right_thumbstick_y = normalize_axis(controller.joystick.get_axis(3))
-        if right_thumbstick_x or right_thumbstick_y:
-            self.moved = True
-        return [right_thumbstick_x, right_thumbstick_y]
+    def init_environment(self):
+        cannon = Entity(name='Death Wave Emitter')
+        position = Position(0, self.height / 2, 5)
+        cannon.add(position)
+        emitter = Emitter(position)
+        cannon.add(emitter)
+        cannon.add(Timer(5, self.playtime, tasks=[emitter.create_projectile]))
+        self.entities.append(cannon)
 
     def render(self):
         self.screen.fill(NOT_QUITE_BLACK)
@@ -130,12 +95,6 @@ class PainWave:
                 pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
 
         pygame.display.flip()
-
-    def poll_controllers(self):
-        for entity in self.entities:
-            controller = entity.get(Controller)
-            if controller:
-                self.move_object(entity, self.get_movement(controller))
 
     def main_loop(self):
         while True:
@@ -153,7 +112,9 @@ class PainWave:
             if pressed[pygame.K_ESCAPE]:
                 break
 
-            self.poll_controllers()
+            update_triggers(self.entities)
+            update_timers(self.entities, self.playtime)
+            update_input(self.entities)
             update_movement(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)

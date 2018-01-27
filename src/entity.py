@@ -1,6 +1,7 @@
 
 class Entity(object):
-    def __init__(self):
+    def __init__(self, name=None):
+        self.name = None
         self.components = []
 
     def get(self, kind):
@@ -19,6 +20,14 @@ class Entity(object):
         if self.get(type(comp)) is not None:
             raise TypeError('Entity already has component of that type')
         self.components.append(comp)
+
+    def __repr__(self):
+        return "<{name} with components {components}>".format(
+            name=self.name or 'Unknown Entity', components=self.components
+        )
+
+    def __str__(self):
+        return self.__repr__()
 
 
 def components_typed(entities, kind):
