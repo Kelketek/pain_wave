@@ -7,6 +7,7 @@ import sys
 
 from src.entity import Entity
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
+from src.boundary import update_boundary
 
 
 def get_joysticks():
@@ -118,8 +119,6 @@ class PainWave:
 
     def render(self):
         self.screen.fill(NOT_QUITE_BLACK)
-        update_movement(self.entities)
-        update_collisions(self.entities)
         for entity in self.entities:
             position = entity.get(Position)
             pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
@@ -143,4 +142,8 @@ class PainWave:
                 break
             for joystick in self.players.keys():
                 self.move_object(self.players[joystick], self.get_movement(joystick))
+
+            update_movement(self.entities)
+            update_collisions(self.entities)
+            update_boundary(self.entities)
             self.render()
