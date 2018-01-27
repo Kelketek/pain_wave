@@ -24,11 +24,12 @@ def main():
     size = width, height = 600, 600
     black = 0, 0, 0
     playtime = 0.0
+    moved = False
 
     # Desired framerate in frames per second. Try out other values.
     FPS = 30
 
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWACCEL)
     ball = pygame.image.load("assets/ball.gif")
     ballrect = ball.get_rect()
 
@@ -36,6 +37,9 @@ def main():
 
         milliseconds = clock.tick(FPS)
         playtime += milliseconds / 1000.0
+        if playtime > 30 and not moved:
+            # Probably a problem that locked us in full screen.
+            sys.exit()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -49,6 +53,7 @@ def main():
 
         for key, value in DIRECT_MAP.items():
             if pressed[key]:
+                moved = True
                 movement = [movement[0] + DIRECT_MAP[key][0], movement[1] + DIRECT_MAP[key][1]]
 
         ballrect = ballrect.move(movement)
