@@ -9,9 +9,15 @@ class Entity(object):
                 return comp
         return None
 
+    def expect(self, kind):
+        result = self.get(kind)
+        if result is None:
+            raise TypeError('Entity does not have component of type ' + str(kind))
+        return result
+
     def add(self, comp):
         if self.get(type(comp)) is not None:
-            raise TypeError, 'Entity already has component of that type'
+            raise TypeError('Entity already has component of that type')
         self.components.append(comp)
 
 def components_typed(entities, kind):
