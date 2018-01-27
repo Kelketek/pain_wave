@@ -1,6 +1,6 @@
 from math import floor
 
-from src.physics import Movement
+from .physics import Movement
 
 DEAD_ZONE = .1
 

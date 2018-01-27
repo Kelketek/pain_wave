@@ -2,23 +2,21 @@
 import pygame
 import sys
 
-from src.entity import Entity
-from src.hardware import Controller, update_input
-from src.logic import Timer, update_triggers, update_timers
-from src.physics import Position, Movement, update_movement, update_collisions, Collision
-from src.boundary import update_boundary
-from src.friction import update_friction, Friction
-from src.grapple import update_grapple, CanGrapple
+from .support import build_wall, Dispenser
+from .entity import Entity
+from .hardware import Controller, update_input
+from .logic import Timer, update_triggers, update_timers
+from .physics import Position, Movement, update_movement, update_collisions, Collision
+from .boundary import update_boundary
+from .friction import update_friction, Friction
+from .grapple import update_grapple, CanGrapple
+from .video import Image, update_screen
+from .violence import Transmitter, PlayerState, Vulnerable
+from .router import update_routers, Router
 
 
 # Desired framerate in frames per second. Try out other values.
-from src.support import build_wall, Dispenser
-from src.video import Image, update_screen
-from src.violence import Transmitter, PlayerState, Vulnerable
-
 FPS = 30
-
-BLACK = 0, 0, 0
 
 FIRE_INTERVAL = 5
 
@@ -34,7 +32,6 @@ class PainWave:
         self.size = self.width, self.height = width, height
         self.playtime = 0.0
         self.offset = 0
-        self.moved = False
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
         self.entities = []
 
@@ -90,9 +87,6 @@ class PainWave:
         while True:
             milliseconds = self.clock.tick(FPS)
             self.playtime += milliseconds / 1000.0
-            if self.playtime > 180 and not self.moved:
-                # Probably a problem that locked us in full screen.
-                sys.exit()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -112,4 +106,7 @@ class PainWave:
             update_friction(self.entities)
             update_collisions(self.entities)
             update_grapple(self.entities)
+            update_routers(self.entities)
+
+            # must update screen last to avoid visual latency
             update_screen(self.entities, self.screen)
