@@ -64,6 +64,12 @@ class Image:
         screen.blit(self.image, rect)
 
 
+class Controller:
+    def __init__(self, joystick):
+        self.joystick = joystick
+        self.moved = False
+
+
 class PainWave:
     def __init__(self, width=600, height=600):
         pygame.init()
@@ -74,14 +80,9 @@ class PainWave:
         self.playtime = 0.0
         self.offset = 0
         self.moved = False
-
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
-        self.ball = pygame.image.load("assets/ball.gif")
-        self.ball_rect = self.ball.get_rect()
         pygame.joystick.init()
         self.entities = []
-        self.joystick_list = []
-        self.player_dict = {}
 
         for _ in range(10):
             entity = Entity()
@@ -91,45 +92,34 @@ class PainWave:
             entity.add(Collision(random() * 10 + 40))
             entity.add(Friction(.9))
 
-    @property
-    def players(self):
-        if len(self.player_dict) == len(self.joysticks):
-            return self.player_dict
-        for joystick in self.joysticks:
-            if joystick not in self.player_dict:
-                entity = Entity()
-                self.player_dict[joystick] = entity
-                self.entities.append(entity)
-                position = Position(110, 110 + self.offset, 8)
-                entity.add(position)
-                entity.add(Movement())
-                entity.add(Collision(10))
-                entity.add(Friction(.95))
-                entity.add(Image("assets/ball.gif", position))
-                self.offset += 2
-                # self.player_dict[joystick] = self.ball.get_rect()
-        return self.player_dict
+        self.init_players()
 
-    @property
-    def joysticks(self):
-        if pygame.joystick.get_count() == len(self.joystick_list):
-            return self.joystick_list
-        self.joystick_list = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())][:8]
-        for stick in self.joystick_list:
-            stick.init()
-        return self.joystick_list
-
-    def get_movement(self, joystick):
-        right_thumbstick_x = normalize_axis(joystick.get_axis(2))
-        right_thumbstick_y = normalize_axis(joystick.get_axis(3))
-        if right_thumbstick_x or right_thumbstick_y:
-            self.moved = True
-        return [right_thumbstick_x, right_thumbstick_y]
+    def init_players(self):
+        for joystick in range(pygame.joystick.get_count()):
+            joystick = pygame.joystick.Joystick(joystick)
+            joystick.init()
+            entity = Entity()
+            self.entities.append(entity)
+            position = Position(110, 110 + self.offset, 8)
+            entity.add(position)
+            entity.add(Movement())
+            entity.add(Collision(10))
+            entity.add(Friction(.95))
+            entity.add(Image("assets/ball.gif", position))
+            entity.add(Controller(joystick))
+            self.offset += 2
 
     def move_object(self, entity, movement):
         target = entity.get(Movement)
         target.vx += movement[0] / 100.0
         target.vy += movement[1] / 100.0
+
+    def get_movement(self, controller):
+        right_thumbstick_x = normalize_axis(controller.joystick.get_axis(2))
+        right_thumbstick_y = normalize_axis(controller.joystick.get_axis(3))
+        if right_thumbstick_x or right_thumbstick_y:
+            self.moved = True
+        return [right_thumbstick_x, right_thumbstick_y]
 
     def render(self):
         self.screen.fill(NOT_QUITE_BLACK)
@@ -142,6 +132,12 @@ class PainWave:
                 pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
 
         pygame.display.flip()
+
+    def poll_controllers(self):
+        for entity in self.entities:
+            controller = entity.get(Controller)
+            if controller:
+                self.move_object(entity, self.get_movement(controller))
 
     def main_loop(self):
         while True:
@@ -158,9 +154,8 @@ class PainWave:
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_ESCAPE]:
                 break
-            for joystick in self.players.keys():
-                self.move_object(self.players[joystick], self.get_movement(joystick))
 
+            self.poll_controllers()
             update_movement(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)
