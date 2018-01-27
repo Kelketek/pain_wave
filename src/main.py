@@ -1,5 +1,6 @@
 # PLAY US A GAME! :V
 from math import floor
+from random import random
 
 import pygame
 import sys
@@ -12,16 +13,18 @@ def get_joysticks():
     return [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
 
+DEAD_ZONE = .1
+
 def normalize_axis(value):
-    if 0 < value < .05:
+    if 0 < value < DEAD_ZONE:
         value = 0
-    if .05 > value > 0:
+    if DEAD_ZONE > value > 0:
         value = 0
     if value:
         if value > 0:
-            value -= .05
+            value -= DEAD_ZONE
         else:
-            value += .05
+            value += DEAD_ZONE
     value *= 100
     value /= 15
     return floor(value)
@@ -38,6 +41,7 @@ DIRECT_MAP = {
 FPS = 30
 
 BLACK = 0, 0, 0
+NOT_QUITE_BLACK = 22, 22, 22
 RED = 255, 0, 0
 
 
@@ -68,6 +72,13 @@ class PainWave:
         self.joystick_list = []
         self.player_dict = {}
 
+        for _ in range(10):
+            entity = Entity()
+            self.entities.append(entity)
+            entity.add(Position(random() * 250, random() * 250, random() * 12 + 8))
+            entity.add(Movement())
+            entity.add(Collision(random() * 10 + 40))
+
     @property
     def players(self):
         if len(self.player_dict) == len(self.joysticks):
@@ -77,7 +88,7 @@ class PainWave:
                 entity = Entity()
                 self.player_dict[joystick] = entity
                 self.entities.append(entity)
-                entity.add(Position(0, 0 + self.offset, 6))
+                entity.add(Position(110, 110 + self.offset, 6))
                 entity.add(Movement())
                 entity.add(Collision(10))
                 self.offset += 2
@@ -102,11 +113,11 @@ class PainWave:
 
     def move_object(self, entity, movement):
         target = entity.get(Movement)
-        # target.vx += movement[0]
-        # target.vy += movement[1]
+        target.vx += movement[0] / 100.0
+        target.vy += movement[1] / 100.0
 
     def render(self):
-        self.screen.fill(BLACK)
+        self.screen.fill(NOT_QUITE_BLACK)
         update_movement(self.entities)
         update_collisions(self.entities)
         for entity in self.entities:

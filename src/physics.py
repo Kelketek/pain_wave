@@ -55,34 +55,7 @@ def update_collisions(entities):
                 movement = entity.get(Movement)
                 mass = entity.get(Collision).mass
                 position_a = entity.get(Position)
-                position_b = entity.get(Position)
+                position_b = other.get(Position)
 
-                movement.vx += abs(position_a.x - position_b.x) / mass * 10.0
-                movement.vy += abs(position_b.y - position_b.y) / mass * 10.0
-
-
-def random_entity():
-    from random import random
-    from entity import Entity
-    # result = Entity(random() * 5 + 10, random() * 9 + 1)
-    # result.x = random() * 10
-    # result.y = random() * 10
-    result = Entity()
-    entity.add(Position(random() * 10, random() * 10))
-    return result
-
-
-### testing ###
-if __name__ == '__main__':
-    assert distance(0, 0, 0, 0) == 0
-    assert distance(0, 0, 1, 0) == 1
-    assert distance(-1, 0, 0, 0) == 1
-
-    entities = []
-    for _ in range(10):
-        entities.append(random_entity())
-
-    print(entities)
-    for _ in range(3):
-        update(entities)
-        print(entities)
+                movement.vx += (position_a.x - position_b.x) / mass
+                movement.vy += (position_a.y - position_b.y) / mass
