@@ -8,6 +8,7 @@ import sys
 from src.entity import Entity
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
+from src.friction import update_friction
 
 
 def get_joysticks():
@@ -98,7 +99,7 @@ class PainWave:
                 entity = Entity()
                 self.player_dict[joystick] = entity
                 self.entities.append(entity)
-                position = Position(110, 110 + self.offset, 6)
+                position = Position(110, 110 + self.offset, 8)
                 entity.add(position)
                 entity.add(Movement())
                 entity.add(Collision(10))
@@ -159,6 +160,7 @@ class PainWave:
                 self.move_object(self.players[joystick], self.get_movement(joystick))
 
             update_movement(self.entities)
+            update_friction(self.entities)
             update_collisions(self.entities)
             update_boundary(self.entities)
             self.render()

@@ -57,5 +57,5 @@ def update_collisions(entities):
                 position_a = entity.get(Position)
                 position_b = other.get(Position)
 
-                movement.vx += (position_a.x - position_b.x) / mass
-                movement.vy += (position_a.y - position_b.y) / mass
+                movement.vx += (position_a.x - position_b.x) / mass / 8.0
+                movement.vy += (position_a.y - position_b.y) / mass / 8.0
