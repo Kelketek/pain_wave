@@ -37,7 +37,7 @@ class Dispenser:
             vulnerable.dead = False
         movement = loot.get(Movement)
         movement.vy = -1
-        loot.add(Position(position.x, position.y - 50, rand_radius()))
+        loot.add(Position(position.x, position.y, rand_radius()))
         entities.append(loot)
 
 

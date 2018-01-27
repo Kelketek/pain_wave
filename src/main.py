@@ -33,19 +33,6 @@ class PainWave:
         self.playtime = 0.0
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
         self.entities = []
-
-        for _ in range(10):
-            self.entities.append(build_wall())
-
-        # for _ in range(7):
-        #     entity = Entity()
-        #     self.entities.append(entity)
-        #     entity.add(Position(random() * 250 + 100, random() * 250 + 100, random() * 8 + 6))
-        #     entity.add(Movement())
-        #     entity.add(Collision(50))
-        #     entity.add(Friction(.9))
-        #     entity.add(Router())
-
         self.init_players()
         self.init_environment()
 
@@ -68,7 +55,7 @@ class PainWave:
             entity.add(Vulnerable(tombstone=True))
             offset += 2
 
-    def make_cannon(self, x, y, velocity):
+    def make_cannon(self, x, y, velocity, offset):
         cannon = Entity(name='Death Wave Transmitter')
         position = Position(x, y, 5)
         cannon.add(position)
@@ -87,8 +74,8 @@ class PainWave:
 
     def init_environment(self):
         offset = 100
-        self.make_cannon(0 + offset, self.height / 2, (4, 0))
-        self.make_cannon(self.width - offset, self.height / 2, (-4, 0))
+        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0))
+        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0))
         self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
         self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
 

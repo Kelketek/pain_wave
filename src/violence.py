@@ -38,18 +38,18 @@ class Murders:
 
 
 class Transmitter:
-    def __init__(self, position, radius=10, velocity=(4, 0), projectile_name='Death Wave'):
+    def __init__(self, position, velocity, projectile_name='Death Wave', offset=(0, 0), radius=10):
         self.position = position
         self.radius = radius
         self.projectile_name = projectile_name
         self.velocity_vector = velocity
+        self.offset = offset
 
     def create_projectile(self, entities):
         entity = Entity(name=self.projectile_name)
-        entity.add(Position(self.position.x, self.position.y, self.radius))
-        movement = Movement()
-        movement.vx = self.velocity_vector[0]
-        movement.vy = self.velocity_vector[1]
+        entity.add(Position(self.position.x + self.offset[0], self.position.y + self.offset[1],
+                            self.radius))
+        movement = Movement(self.velocity_vector[0], self.velocity_vector[1])
         entity.add(movement)
         entity.add(Collision(1))
         entity.add(Friction(.999))

@@ -38,8 +38,9 @@ def update_grapple(entities):
             continue
         if controller.joystick.get_button(11):
             if entity.get(Drag) is None:
-                nearest = nearest_to(entities, entity)
-                if entity_gap(entity, nearest) < 1:
+                dragables = entities_with(entities, Collision)
+                nearest = nearest_to(dragables, entity)
+                if nearest and entity_gap(entity, nearest) < 1:
                     entity.add(Drag(nearest))
         else:
             entity.remove_type(Drag)
