@@ -21,6 +21,9 @@ class Entity(object):
             raise TypeError('Entity already has component of that type')
         self.components.append(comp)
 
+    def remove_type(self, kind):
+        self.components = [comp for comp in self.components if type(comp) != kind]
+
     def __repr__(self):
         return "<{name} with components {components}>".format(
             name=self.name or 'Unknown Entity', components=self.components

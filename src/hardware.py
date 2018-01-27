@@ -33,9 +33,9 @@ def move_object(entity, movement):
 
 
 def get_movement(controller):
-    right_thumbstick_x = normalize_axis(controller.joystick.get_axis(2))
-    right_thumbstick_y = normalize_axis(controller.joystick.get_axis(3))
-    return [right_thumbstick_x, right_thumbstick_y]
+    left_thumbstick_x = normalize_axis(controller.joystick.get_axis(0))
+    right_thumbstick_y = normalize_axis(controller.joystick.get_axis(1))
+    return [left_thumbstick_x, right_thumbstick_y]
 
 
 def update_input(entities):

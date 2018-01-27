@@ -1,7 +1,6 @@
 # PLAY US A GAME! :V
 from math import floor
 from random import random
-
 import pygame
 import sys
 
@@ -10,7 +9,8 @@ from src.hardware import Controller, update_input
 from src.logic import Emitter, Timer, update_triggers, update_timers
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
-from src.friction import update_friction
+from src.friction import update_friction, Friction
+from src.grapple import update_grapple, CanGrapple
 
 
 # Desired framerate in frames per second. Try out other values.
@@ -31,8 +31,10 @@ class Image:
 
     def blit(self, screen):
         rect = (
-            floor(self.position.x - self.position.radius), floor(self.position.y - self.position.radius),
-            floor(self.position.x + self.position.radius), floor(self.position.y - self.position.radius)
+            floor(self.position.x - self.position.radius),
+            floor(self.position.y - self.position.radius),
+            floor(self.position.x + self.position.radius),
+            floor(self.position.y - self.position.radius)
         )
         screen.blit(self.image, rect)
 
@@ -48,7 +50,6 @@ class PainWave:
         self.offset = 0
         self.moved = False
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
-        pygame.joystick.init()
         self.entities = []
 
         for _ in range(10):
@@ -57,6 +58,7 @@ class PainWave:
             entity.add(Position(random() * 250, random() * 250, random() * 12 + 8))
             entity.add(Movement())
             entity.add(Collision(random() * 10 + 40))
+            entity.add(Friction(.9))
 
         self.init_players()
         self.init_environment()
@@ -71,8 +73,10 @@ class PainWave:
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
+            entity.add(Friction(.95))
             entity.add(Image("assets/ball.gif", position))
             entity.add(Controller(joystick))
+            entity.add(CanGrapple())
             self.offset += 2
 
     def init_environment(self):
@@ -96,17 +100,25 @@ class PainWave:
 
         pygame.display.flip()
 
+    def poll_controllers(self):
+        for entity in self.entities:
+            controller = entity.get(Controller)
+            if controller:
+                self.accelerate_object(entity, self.get_movement(controller))
+
     def main_loop(self):
         while True:
             milliseconds = self.clock.tick(FPS)
             self.playtime += milliseconds / 1000.0
-            if self.playtime > 30 and not self.moved:
+            if self.playtime > 180 and not self.moved:
                 # Probably a problem that locked us in full screen.
                 sys.exit()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+                # if event.type == pygame.JOYBUTTONDOWN:
+                #     print(repr(event.button))
 
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_ESCAPE]:
@@ -116,7 +128,8 @@ class PainWave:
             update_timers(self.entities, self.playtime)
             update_input(self.entities)
             update_movement(self.entities)
+            update_boundary(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)
-            update_boundary(self.entities)
+            update_grapple(self.entities)
             self.render()
