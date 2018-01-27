@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from src.main import main
+from src.main import PainWave
 
-main()
+PainWave().main_loop()
 print("Thank you for playing!")
