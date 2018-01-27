@@ -1,5 +1,4 @@
 # PLAY US A GAME! :V
-from random import random
 import pygame
 import sys
 
@@ -13,12 +12,17 @@ from src.grapple import update_grapple, CanGrapple
 
 
 # Desired framerate in frames per second. Try out other values.
+from src.support import build_wall, Dispenser
 from src.video import Image, update_screen
-from src.violence import Transmitter
+from src.violence import Transmitter, PlayerState, Vulnerable
 
 FPS = 30
 
 BLACK = 0, 0, 0
+
+FIRE_INTERVAL = 5
+
+DISPENSE_INTERVAL = FIRE_INTERVAL * 3
 
 
 class PainWave:
@@ -35,40 +39,52 @@ class PainWave:
         self.entities = []
 
         for _ in range(10):
-            entity = Entity()
-            self.entities.append(entity)
-            entity.add(Position(random() * 250, random() * 250, random() * 12 + 8))
-            entity.add(Movement())
-            entity.add(Collision(random() * 10 + 40))
-            entity.add(Friction(.9))
+            self.entities.append(build_wall())
 
         self.init_players()
         self.init_environment()
 
     def init_players(self):
-        for joystick in range(pygame.joystick.get_count()):
+        for i, joystick in enumerate(range(pygame.joystick.get_count())):
             joystick = pygame.joystick.Joystick(joystick)
             joystick.init()
-            entity = Entity()
+            entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
             position = Position(110, 110 + self.offset, 8)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
             entity.add(Friction(.95))
-            entity.add(Image("assets/ball.gif", position))
+            entity.add(Image("assets/ball.gif", entity))
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
+            entity.add(PlayerState(team=i % 2))
+            entity.add(Vulnerable(tombstone=True))
             self.offset += 2
 
-    def init_environment(self):
+    def make_cannon(self, x, y, velocity):
         cannon = Entity(name='Death Wave Transmitter')
-        position = Position(0, self.height / 2, 5)
+        position = Position(x, y, 5)
         cannon.add(position)
-        emitter = Transmitter(position)
-        cannon.add(emitter)
-        cannon.add(Timer(5, self.playtime, tasks=[emitter.create_projectile]))
+        transmitter = Transmitter(position, velocity=velocity)
+        cannon.add(transmitter)
+        cannon.add(Timer(FIRE_INTERVAL, self.playtime, tasks=[transmitter.create_projectile]))
         self.entities.append(cannon)
+
+    def make_dispenser(self, x, y, team):
+        tetris_god = Entity(name='Dispensor for team {}'.format(team + 1))
+        dispenser = Dispenser(team=team, entity=tetris_god)
+        tetris_god.add(dispenser)
+        tetris_god.add(Position(x, y, 3))
+        tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
+        self.entities.append(tetris_god)
+
+    def init_environment(self):
+        offset = 100
+        self.make_cannon(0 + offset, self.height / 2, (4, 0))
+        self.make_cannon(self.width - offset, self.height / 2, (-4, 0))
+        self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
+        self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
 
     def main_loop(self):
         while True:

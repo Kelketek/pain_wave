@@ -1,7 +1,8 @@
 from src.entity import Entity
 from src.friction import Friction
+from src.hardware import Controller
 from src.logic import Trigger
-from src.physics import Position, Movement, Collision, entity_overlap
+from src.physics import Collision, Movement, Position, entity_overlap
 
 
 class Murders:
@@ -21,6 +22,13 @@ class Murders:
 
     def kill(self, entities):
         for entity in self.hit_list:
+            controller = entity.get(Controller)
+            if controller:
+                controller.disabled = True
+            vulnerable = entity.get(Vulnerable)
+            if vulnerable.tombstone:
+                vulnerable.dead = True
+                continue
             entities.remove(entity)
 
 
@@ -61,8 +69,17 @@ class ClearsOnStop:
         entities.remove(self.entity)
 
 
+class PlayerState:
+    def __init__(self, team):
+        self.team = team
+        self.dead = False
+
+
 class Vulnerable:
-    """Used as a flag to declare whether something should be destroyed
-    if touched by a destructive item.
+    """Declares whether something should be destroyed
+    if touched by a destructive item. If 'tombstone' is set, keeps in the entity list,
+    but removes ability to affect other entities.
     """
-    pass
+    def __init__(self, tombstone=False):
+        self.tombstone = tombstone
+        self.dead = False

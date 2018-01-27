@@ -24,6 +24,7 @@ class Controller:
     def __init__(self, joystick):
         self.joystick = joystick
         self.moved = False
+        self.disabled = False
 
 
 def move_object(entity, movement):
@@ -41,5 +42,5 @@ def get_movement(controller):
 def update_input(entities):
     for entity in entities:
         controller = entity.get(Controller)
-        if controller:
+        if controller and not controller.disabled:
             move_object(entity, get_movement(controller))

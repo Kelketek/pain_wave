@@ -9,19 +9,24 @@ NOT_QUITE_BLACK = 22, 22, 22
 
 
 class Image:
-    def __init__(self, path, position, depth=0):
+    def __init__(self, path, entity, depth=0):
+        position = entity.get(Position)
         self.image = pygame.transform.scale(
             pygame.image.load(path),
             (floor(position.radius * 2), floor(position.radius * 2))
         )
-        self.position = position
+        self.entity = entity
 
     def blit(self, screen):
+        position = self.entity.get(Position)
+        if not position:
+            # Removed from screen.
+            pass
         rect = (
-            floor(self.position.x - self.position.radius),
-            floor(self.position.y - self.position.radius),
-            floor(self.position.x + self.position.radius),
-            floor(self.position.y - self.position.radius)
+            floor(position.x - position.radius),
+            floor(position.y - position.radius),
+            floor(position.x + position.radius),
+            floor(position.y - position.radius)
         )
         screen.blit(self.image, rect)
 
