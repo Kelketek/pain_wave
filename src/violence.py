@@ -1,3 +1,4 @@
+from .hardware import Controller
 from .entity import Entity
 from .friction import Friction
 from .logic import Trigger
@@ -22,7 +23,18 @@ class Murders:
 
     def kill(self, entities):
         for entity in self.hit_list:
-            entities.remove(entity)
+            controller = entity.get(Controller)
+            if controller:
+                controller.disabled = True
+            vulnerable = entity.get(Vulnerable)
+            if vulnerable.tombstone:
+                vulnerable.dead = True
+                continue
+            try:
+                entities.remove(entity)
+            except ValueError:
+                # Already removed by some other condition.
+                pass
 
 
 class Transmitter:
@@ -39,7 +51,7 @@ class Transmitter:
         movement.vx = self.velocity_vector[0]
         movement.vy = self.velocity_vector[1]
         entity.add(movement)
-        entity.add(Collision(10))
+        entity.add(Collision(1))
         entity.add(Friction(.999))
         clear = ClearsOnStop(entity, cutoff=2)
         murder = Murders(entity)
@@ -60,11 +72,24 @@ class ClearsOnStop:
             return True
 
     def clear(self, entities):
-        entities.remove(self.entity)
+        try:
+            entities.remove(self.entity)
+        except ValueError:
+            # Already removed by some other condition.
+            pass
+
+
+class PlayerState:
+    def __init__(self, team):
+        self.team = team
+        self.dead = False
 
 
 class Vulnerable:
-    """Used as a flag to declare whether something should be destroyed
-    if touched by a destructive item.
+    """Declares whether something should be destroyed
+    if touched by a destructive item. If 'tombstone' is set, keeps in the entity list,
+    but removes ability to affect other entities.
     """
-    pass
+    def __init__(self, tombstone=False):
+        self.tombstone = tombstone
+        self.dead = False
