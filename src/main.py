@@ -9,6 +9,7 @@ from src.entity import Entity
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
 from src.friction import update_friction, Friction
+from src.grapple import Grapple, update_grapple
 
 
 def get_joysticks():
@@ -105,6 +106,7 @@ class PainWave:
             entity.add(Movement())
             entity.add(Collision(10))
             entity.add(Friction(.95))
+            entity.add(Grapple(self.entities[0]))
             entity.add(Image("assets/ball.gif", position))
             entity.add(Controller(joystick))
             self.offset += 2
@@ -157,7 +159,8 @@ class PainWave:
 
             self.poll_controllers()
             update_movement(self.entities)
+            update_boundary(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)
-            update_boundary(self.entities)
+            update_grapple(self.entities)
             self.render()
