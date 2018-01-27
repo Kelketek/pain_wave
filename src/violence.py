@@ -30,7 +30,11 @@ class Murders:
             if vulnerable.tombstone:
                 vulnerable.dead = True
                 continue
-            entities.remove(entity)
+            try:
+                entities.remove(entity)
+            except ValueError:
+                # Already removed by some other condition.
+                pass
 
 
 class Transmitter:
@@ -47,7 +51,7 @@ class Transmitter:
         movement.vx = self.velocity_vector[0]
         movement.vy = self.velocity_vector[1]
         entity.add(movement)
-        entity.add(Collision(10))
+        entity.add(Collision(1))
         entity.add(Friction(.999))
         clear = ClearsOnStop(entity, cutoff=2)
         murder = Murders(entity)
@@ -68,7 +72,11 @@ class ClearsOnStop:
             return True
 
     def clear(self, entities):
-        entities.remove(self.entity)
+        try:
+            entities.remove(self.entity)
+        except ValueError:
+            # Already removed by some other condition.
+            pass
 
 
 class PlayerState:
