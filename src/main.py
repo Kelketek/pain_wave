@@ -15,6 +15,7 @@ def get_joysticks():
 
 DEAD_ZONE = .1
 
+
 def normalize_axis(value):
     if 0 < value < DEAD_ZONE:
         value = 0
@@ -46,11 +47,19 @@ RED = 255, 0, 0
 
 
 class Image:
-    def __init__(self, source):
-        self.image = pygame.image.load("assets/ball.gif")
+    def __init__(self, path, position, depth=0):
+        self.image = pygame.transform.scale(
+            pygame.image.load(path),
+            (floor(position.radius * 2), floor(position.radius * 2))
+        )
+        self.position = position
 
-    def blit(self, screen, position):
-        pass
+    def blit(self, screen):
+        rect = (
+            floor(self.position.x - self.position.radius), floor(self.position.y - self.position.radius),
+            floor(self.position.x + self.position.radius), floor(self.position.y - self.position.radius)
+        )
+        screen.blit(self.image, rect)
 
 
 class PainWave:
@@ -88,9 +97,11 @@ class PainWave:
                 entity = Entity()
                 self.player_dict[joystick] = entity
                 self.entities.append(entity)
-                entity.add(Position(110, 110 + self.offset, 6))
+                position = Position(110, 110 + self.offset, 6)
+                entity.add(position)
                 entity.add(Movement())
                 entity.add(Collision(10))
+                entity.add(Image("assets/ball.gif", position))
                 self.offset += 2
                 # self.player_dict[joystick] = self.ball.get_rect()
         return self.player_dict
@@ -121,8 +132,12 @@ class PainWave:
         update_movement(self.entities)
         update_collisions(self.entities)
         for entity in self.entities:
-            position = entity.get(Position)
-            pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
+            image = entity.get(Image)
+            if image:
+                image.blit(self.screen)
+            else:
+                position = entity.get(Position)
+                pygame.draw.circle(self.screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
 
         pygame.display.flip()
 
