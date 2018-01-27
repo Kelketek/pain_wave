@@ -1,7 +1,8 @@
-from src.entity import Entity
-from src.friction import Friction
-from src.logic import Trigger
-from src.physics import Position, Movement, Collision, entity_overlap
+from .entity import Entity
+from .friction import Friction
+from .logic import Trigger
+from .physics import Position, Movement, Collision, entity_overlap
+from .router import Routable
 
 
 class Murders:
@@ -44,6 +45,7 @@ class Transmitter:
         murder = Murders(entity)
         entity.add(Trigger([(clear.check, clear.clear), (murder.grope, murder.kill)]))
         entity.add(Vulnerable())
+        entity.add(Routable())
         entities.append(entity)
 
 

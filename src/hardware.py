@@ -1,6 +1,6 @@
 from math import floor
 
-from src.physics import Movement
+from .physics import Movement
 
 DEAD_ZONE = .1
 
@@ -23,7 +23,6 @@ def normalize_axis(value):
 class Controller:
     def __init__(self, joystick):
         self.joystick = joystick
-        self.moved = False
 
 
 def move_object(entity, movement):
