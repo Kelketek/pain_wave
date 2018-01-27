@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectResources">
+    <resource url="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" location="" />
+    <resource url="http://www.w3.org/2007/05/addressing/metadata" location="" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="Python 3.6 (env)" project-jdk-type="Python SDK" />
+</project>
