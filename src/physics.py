@@ -10,9 +10,9 @@ class Position:
 
 
 class Movement:
-    def __init__(self):
-        self.vx = 0.0
-        self.vy = 0.0
+    def __init__(self, vx=0.0, vy=0.0):
+        self.vx = vx
+        self.vy = vy
 
 
 class Collision:

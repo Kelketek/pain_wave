@@ -42,7 +42,7 @@ class ClearsOnStop:
         entities.remove(self.entity)
 
 
-class Emitter:
+class Transmitter:
     def __init__(self, position, radius=10, velocity=(4, 0), projectile_name='Death Wave'):
         self.position = position
         self.radius = radius
@@ -52,10 +52,7 @@ class Emitter:
     def create_projectile(self, entities):
         entity = Entity(name=self.projectile_name)
         entity.add(Position(self.position.x, self.position.y, self.radius))
-        movement = Movement()
-        movement.vx = self.velocity_vector[0]
-        movement.vy = self.velocity_vector[1]
-        entity.add(movement)
+        entity.add(Movement(self.velocity_vector[0], self.velocity_vector[1]))
         entity.add(Collision(10))
         entity.add(Friction(.999))
         clear = ClearsOnStop(entity, cutoff=2)

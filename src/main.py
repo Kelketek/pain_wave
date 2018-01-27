@@ -6,7 +6,7 @@ import sys
 
 from src.entity import Entity
 from src.hardware import Controller, update_input
-from src.logic import Emitter, Timer, update_triggers, update_timers
+from src.logic import Transmitter, Timer, update_triggers, update_timers
 from src.physics import Position, Movement, update_movement, update_collisions, Collision
 from src.boundary import update_boundary
 from src.friction import update_friction, Friction
@@ -80,10 +80,10 @@ class PainWave:
             self.offset += 2
 
     def init_environment(self):
-        cannon = Entity(name='Death Wave Emitter')
+        cannon = Entity(name='Death Wave Transmitter')
         position = Position(0, self.height / 2, 5)
         cannon.add(position)
-        emitter = Emitter(position)
+        emitter = Transmitter(position)
         cannon.add(emitter)
         cannon.add(Timer(5, self.playtime, tasks=[emitter.create_projectile]))
         self.entities.append(cannon)
