@@ -1,10 +1,15 @@
+from math import floor
 from random import random
 
 from src.entity import Entity
 from src.friction import Friction
 from src.hardware import Controller
 from src.physics import Collision, Movement, Position
+from src.video import Image
 from src.violence import PlayerState, Vulnerable
+
+
+wall_counter = [0]
 
 
 class Dispenser:
@@ -32,12 +37,18 @@ class Dispenser:
         controller = loot.get(Controller)
         if controller:
             controller.disabled = False
+            # Is a player.
+            image = loot.get(Image)
+            width = image.image.get_width()
+            radius = floor(width / 2)
+            loot.add(Position(position.x, position.y, radius))
+        else:
+            loot.add(Position(position.x, position.y - 50, rand_radius()))
         vulnerable = loot.get(Vulnerable)
         if vulnerable:
             vulnerable.dead = False
         movement = loot.get(Movement)
         movement.vy = -1
-        loot.add(Position(position.x, position.y - 50, rand_radius()))
         entities.append(loot)
 
 
@@ -46,7 +57,8 @@ def rand_radius():
 
 
 def build_wall(place=True):
-    entity = Entity()
+    wall_counter[0] += 1
+    entity = Entity(name='Wall {}'.format(wall_counter[0]))
     if place:
         entity.add(Position(random() * 250, random() * 250, rand_radius()))
     entity.add(Movement())
