@@ -48,7 +48,7 @@ class Dispenser:
             loot.replace(Position(position.x, position.y, radius))
             loot.add(Collision(10))
         elif router:
-            loot.add(Position(position.x, position.y, 20))
+            loot.add(Position(position.x, position.y, 10))
         else:
             loot.add(Position(position.x, position.y, rand_radius()))
         vulnerable = loot.get(Vulnerable)
@@ -60,7 +60,7 @@ class Dispenser:
 
 
 def rand_radius():
-    return random() * 24 + 16
+    return random() * 12 + 8
 
 
 def build_wall():

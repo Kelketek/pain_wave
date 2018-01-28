@@ -59,7 +59,7 @@ class Murders:
 
 
 class Transmitter:
-    def __init__(self, position, velocity, projectile_name='Pain Wave', offset=(0, 0), radius=20):
+    def __init__(self, position, velocity, projectile_name='Pain Wave', offset=(0, 0), radius=10):
         self.position = position
         self.radius = radius
         self.projectile_name = projectile_name

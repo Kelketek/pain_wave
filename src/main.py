@@ -57,7 +57,7 @@ class PainWave:
             joystick.init()
             entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
-            position = Position(*self.dispenser_position(team), radius=24)
+            position = Position(*self.dispenser_position(team), radius=12)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
@@ -74,7 +74,7 @@ class PainWave:
 
     def make_cannon(self, x, y, velocity, offset, angle, team):
         cannon = Entity(name='Pain Wave Transmitter')
-        position = Position(x, y, 10)
+        position = Position(x, y, 5)
         cannon.add(position)
         transmitter = Transmitter(position, velocity=velocity, offset=offset)
         cannon.add(transmitter)
@@ -88,7 +88,7 @@ class PainWave:
         self.entities.append(cannon)
 
     def dispenser_position(self, team):
-        offset = 200
+        offset = 50
         if team == 1:
             return (offset / 2), (self.height / 2)
         else:
@@ -98,16 +98,16 @@ class PainWave:
         tetris_god = Entity(name='Dispensor for team {}'.format(team + 1))
         dispenser = Dispenser(team=team, entity=tetris_god)
         tetris_god.add(dispenser)
-        tetris_god.add(Position(x, y, 36))
+        tetris_god.add(Position(x, y, 18))
         tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
         tetris_god.add(Image('assets/dispenser.png', tetris_god))
         self.entities.append(tetris_god)
         dispenser.dispense(self.entities)
 
     def init_environment(self):
-        offset = 200
-        self.make_cannon(0 + offset, self.height / 2, (8, 0), (36, 0), angle=90, team=1)
-        self.make_cannon(self.width - offset, self.height / 2, (-8, 0), (-36, 0), angle=-90, team=2)
+        offset = 100
+        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0), angle=90, team=1)
+        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0), angle=-90, team=2)
         self.make_dispenser(*self.dispenser_position(1), team=1)
         self.make_dispenser(*self.dispenser_position(2), team=2)
         self.init_players()

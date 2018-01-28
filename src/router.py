@@ -20,7 +20,7 @@ class Routable:
 def update_routers(entities):
     for entity in entities_with(entities, Router):
         for other in entities_with(entities, Routable):
-            if entity_overlap(entity, other) > -20:
+            if entity_overlap(entity, other) > -10:
                 facing = entity.get(Facing)
                 movement = other.get(Movement)
                 if not (facing and movement):
