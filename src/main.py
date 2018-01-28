@@ -49,13 +49,13 @@ class PainWave:
         self.loser = None
 
     def init_players(self):
-        offset = 0
         for i, joystick in enumerate(range(pygame.joystick.get_count())):
+            team = (i % 2) + 1
             joystick = pygame.joystick.Joystick(joystick)
             joystick.init()
             entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
-            position = Position(110, 110 + offset, 24)
+            position = Position(*self.dispenser_position(team), radius=24)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
@@ -63,12 +63,11 @@ class PainWave:
             entity.add(Image('assets/character.png', entity, fixed_rotation=True))
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
-            entity.add(Team(team=(i % 2) + 1))
+            entity.add(Team(team=team))
             entity.add(Vulnerable(
                 tombstone=True, next_image=Image('assets/character_dead.png', entity, fixed_rotation=True))
             )
             entity.add(Facing(0, entity))
-            offset += 2
 
     def make_cannon(self, x, y, velocity, offset, angle, team):
         cannon = Entity(name='Pain Wave Transmitter')
@@ -85,6 +84,13 @@ class PainWave:
         cannon.add(Facing(angle, cannon))
         self.entities.append(cannon)
 
+    def dispenser_position(self, team):
+        offset = 200
+        if team == 1:
+            return (offset / 2), (self.height / 2)
+        else:
+            return (self.width - (offset / 2)), (self.height / 2)
+
     def make_dispenser(self, x, y, team):
         tetris_god = Entity(name='Dispensor for team {}'.format(team + 1))
         dispenser = Dispenser(team=team, entity=tetris_god)
@@ -95,12 +101,12 @@ class PainWave:
         self.entities.append(tetris_god)
 
     def init_environment(self):
-        self.init_players()
         offset = 200
         self.make_cannon(0 + offset, self.height / 2, (8, 0), (36, 0), angle=90, team=1)
         self.make_cannon(self.width - offset, self.height / 2, (-8, 0), (-36, 0), angle=-90, team=2)
-        self.make_dispenser(0 + (offset / 2), self.height / 2, team=1)
-        self.make_dispenser(self.width - (offset / 2), self.height / 2, team=2)
+        self.make_dispenser(*self.dispenser_position(1), team=1)
+        self.make_dispenser(*self.dispenser_position(2), team=2)
+        self.init_players()
 
     @property
     def winner(self):
