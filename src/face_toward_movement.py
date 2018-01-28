@@ -13,6 +13,5 @@ def update_face_toward_movement(entities):
         movement = entity.get(Movement)
         if (not facing) or (not movement):
             continue
-        # facing =
         angle = degrees_from_point(movement.vx, movement.vy)
         facing.degrees = angle
