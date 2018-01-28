@@ -85,8 +85,8 @@ class PainWave:
     def init_environment(self):
         self.init_players()
         offset = 100
-        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0), angle=-90)
-        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0), angle=90)
+        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0), angle=90)
+        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0), angle=-90)
         self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
         self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
 
@@ -105,7 +105,7 @@ class PainWave:
             if pressed[pygame.K_ESCAPE]:
                 break
 
-            # update_end_gameplay(self.entities)
+            update_end_gameplay(self.entities)
             update_triggers(self.entities)
             update_timers(self.entities, self.playtime)
             update_input(self.entities)
