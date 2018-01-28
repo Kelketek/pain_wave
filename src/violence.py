@@ -4,7 +4,7 @@ from .hardware import Controller
 from .entity import Entity
 from .friction import Friction
 from .logic import Trigger
-from .physics import Position, Movement, Collision, entity_overlap
+from .physics import Position, Movement, Collision, entity_overlap, distance
 from .router import Routable
 from .facing import Facing
 from .face_toward_movement import FaceTowardMovement
@@ -85,8 +85,10 @@ class ClearsOnStop:
 
     def check(self, _):
         movement = self.entity.get(Movement)
-        if movement and abs(movement.vx) <= self.cutoff and abs(movement.vy <= self.cutoff):
-            return True
+        if movement:
+            magnitude = distance(0, 0, movement.vx, movement.vy)
+            if magnitude <= self.cutoff:
+                return True
 
     def clear(self, entities):
         try:

@@ -1,6 +1,5 @@
 # PLAY US A GAME! :V
 import pygame
-# import pygame.mixer
 import sys
 
 pygame.init()
