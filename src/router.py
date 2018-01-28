@@ -23,7 +23,7 @@ def update_routers(entities):
             if entity_overlap(entity, other) > -5:
                 facing = entity.get(Facing)
                 movement = other.get(Movement)
-                if not facing and movement:
+                if (not facing) or (not movement):
                     continue
                 magnitude = abs(distance(0, 0, movement.vx, movement.vy))
                 result = rotate((0, 0), (0, magnitude), facing.degrees)
