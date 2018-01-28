@@ -12,12 +12,13 @@ BACKGROUND = 22, 22, 22
 
 class Image:
     def __init__(self, path, entity):
-        position = entity.get(Position)
         self.path = path
         self.image = None
         self.entity = entity
+        self.cached = None
+        self.last_degrees = None
 
-    def blit(self, screen):
+    def blit(self, screen, degrees=None):
         position = self.entity.get(Position)
         if not position:
             # Removed from screen.
@@ -27,8 +28,14 @@ class Image:
                 pygame.image.load(self.path),
                 (floor(position.radius * 2), floor(position.radius * 2))
             )
+        if not (self.cached and self.last_degrees == degrees):
+            if degrees is not None:
+                self.cached = rot_center(self.image, degrees + 180)
+            else:
+                self.cached = self.image
+            self.last_degrees = degrees
         rect = position_rect(position)
-        screen.blit(self.image, rect)
+        screen.blit(self.cached, rect)
 
 
 def update_screen(entities, screen, background):
@@ -36,11 +43,12 @@ def update_screen(entities, screen, background):
     for entity in entities:
         image = entity.get(Image)
         position = entity.get(Position)
+        facing = entity.get(Facing)
+        degrees = (facing or 0) and facing.degrees
         if image:
-            image.blit(screen)
+            image.blit(screen, degrees)
         else:
             pygame.draw.circle(screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
-        facing = entity.get(Facing)
         if facing and position:
             if facing.last_degrees != facing.degrees:
                 radius, surface = direction_arrow(entity, facing.degrees)
@@ -52,7 +60,7 @@ def update_screen(entities, screen, background):
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
     orig_rect = image.get_rect()
-    rot_image = pygame.transform.rotate(image, angle)
+    rot_image = pygame.transform.rotozoom(image, angle, 1)
     rot_rect = orig_rect.copy()
     rot_rect.center = rot_image.get_rect().center
     rot_image = rot_image.subsurface(rot_rect).copy()
