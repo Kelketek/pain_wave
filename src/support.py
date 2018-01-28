@@ -27,7 +27,6 @@ class Dispenser:
                 self.hopper.append(entity)
                 entities.remove(entity)
                 vulnerable.dead = False
-                entity.remove_type(Position)
         while len(self.hopper) < 5:
             # if random() < .25:
             self.hopper.insert(0, build_router())
@@ -43,10 +42,10 @@ class Dispenser:
         if controller:
             controller.disabled = False
             # Is a player.
+            loot.replace(Image('assets/character.png', loot, fixed_rotation=True))
             image = loot.get(Image)
-            width = image.image.get_width()
-            radius = floor(width / 2)
-            loot.add(Position(position.x, position.y, radius))
+            radius = loot.get(Position).radius
+            loot.replace(Position(position.x, position.y, radius))
             loot.add(Collision(10))
         elif router:
             loot.add(Position(position.x, position.y, 20))

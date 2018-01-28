@@ -55,7 +55,7 @@ class PainWave:
             joystick.init()
             entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
-            position = Position(110, 110 + offset, 24)
+            position = Position(110, 370 + offset, 24)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
@@ -65,8 +65,9 @@ class PainWave:
             entity.add(CanGrapple())
             entity.add(Team(team=(i % 2) + 1))
             entity.add(Vulnerable(
-                tombstone=True, next_image=Image('assets/character_dead.png', entity, fixed_rotation=True))
-            )
+                tombstone=True,
+                next_image=Image('assets/character_dead.png', entity, fixed_rotation=True)
+            ))
             entity.add(Facing(0, entity))
             offset += 2
 
@@ -95,12 +96,12 @@ class PainWave:
         self.entities.append(tetris_god)
 
     def init_environment(self):
-        self.init_players()
         offset = 200
         self.make_cannon(0 + offset, self.height / 2, (8, 0), (36, 0), angle=90, team=1)
         self.make_cannon(self.width - offset, self.height / 2, (-8, 0), (-36, 0), angle=-90, team=2)
         self.make_dispenser(0 + (offset / 2), self.height / 2, team=1)
         self.make_dispenser(self.width - (offset / 2), self.height / 2, team=2)
+        self.init_players()
 
     @property
     def winner(self):
