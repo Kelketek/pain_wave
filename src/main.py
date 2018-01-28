@@ -13,6 +13,7 @@ from .grapple import update_grapple, CanGrapple
 from .video import Image, update_screen
 from .violence import Transmitter, PlayerState, Vulnerable
 from .router import update_routers, Router
+from .game_over import EndGameplayOnDeath, update_end_gameplay
 
 
 # Desired framerate in frames per second. Try out other values.
@@ -59,9 +60,11 @@ class PainWave:
         cannon = Entity(name='Death Wave Transmitter')
         position = Position(x, y, 5)
         cannon.add(position)
-        transmitter = Transmitter(position, velocity=velocity)
+        transmitter = Transmitter(position, velocity=velocity, offset=offset)
         cannon.add(transmitter)
         cannon.add(Timer(FIRE_INTERVAL, self.playtime, tasks=[transmitter.create_projectile]))
+        cannon.add(EndGameplayOnDeath())
+        cannon.add(Vulnerable(tombstone=True))
         self.entities.append(cannon)
 
     def make_dispenser(self, x, y, team):
@@ -95,6 +98,7 @@ class PainWave:
             if pressed[pygame.K_ESCAPE]:
                 break
 
+            update_end_gameplay(self.entities)
             update_triggers(self.entities)
             update_timers(self.entities, self.playtime)
             update_input(self.entities)

@@ -68,7 +68,7 @@ class ClearsOnStop:
 
     def check(self, _):
         movement = self.entity.get(Movement)
-        if abs(movement.vx) <= self.cutoff and abs(movement.vy <= self.cutoff):
+        if movement and abs(movement.vx) <= self.cutoff and abs(movement.vy <= self.cutoff):
             return True
 
     def clear(self, entities):
