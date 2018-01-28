@@ -1,13 +1,13 @@
 from math import floor
 from random import random
 
-from src.entity import Entity
-from src.friction import Friction
-from src.hardware import Controller
-from src.physics import Collision, Movement, Position
-from src.router import build_router, Router
-from src.video import Image
-from src.violence import PlayerState, Vulnerable
+from .entity import Entity
+from .friction import Friction
+from .hardware import Controller
+from .physics import Collision, Movement, Position
+from .router import build_router, Router
+from .video import Image
+from .violence import PlayerState, Vulnerable
 
 
 wall_counter = [0]

@@ -1,6 +1,7 @@
 from math import floor
 
-from src.physics import Movement, Facing, degrees_from_point
+from .physics import Movement, degrees_from_point
+from .facing import Facing
 
 DEAD_ZONE = .1
 

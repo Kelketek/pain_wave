@@ -6,7 +6,7 @@ from .support import Dispenser
 from .entity import Entity
 from .hardware import Controller, update_input
 from .logic import Timer, update_triggers, update_timers
-from .physics import Position, Movement, update_movement, update_collisions, Collision, Facing
+from .physics import Position, Movement, update_movement, update_collisions, Collision
 from .boundary import update_boundary
 from .friction import update_friction, Friction
 from .grapple import update_grapple, CanGrapple
@@ -14,6 +14,7 @@ from .video import Image, update_screen
 from .violence import Transmitter, PlayerState, Vulnerable
 from .router import update_routers
 from .game_over import EndGameplayOnDeath, update_end_gameplay
+from .facing import Facing
 
 
 # Desired framerate in frames per second. Try out other values.

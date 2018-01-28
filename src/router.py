@@ -1,8 +1,9 @@
 import random
 
-from src.entity import entities_with, Entity
-from src.friction import Friction
-from src.physics import entity_overlap, Facing, Movement, distance, degrees_from_point, rotate, Collision
+from .entity import entities_with, Entity
+from .friction import Friction
+from .physics import entity_overlap, Movement, distance, degrees_from_point, rotate, Collision
+from .facing import Facing
 
 
 router_counter = [1]
@@ -34,7 +35,7 @@ def build_router():
     entity = Entity(name='Router {}'.format(router_counter[0]))
     entity.add(Movement())
     entity.add(Facing(random.randint(0, 360), entity))
-    entity.add(Collision(5))
+    entity.add(Collision(25))
     entity.add(Friction(.9))
     entity.add(Router())
     return entity

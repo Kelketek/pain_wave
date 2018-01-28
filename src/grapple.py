@@ -54,11 +54,14 @@ def update_grapple(entities):
         both_radii = position_a.radius + position_b.radius
         if cdistance > both_radii * 1.05:
             movement_a = entity.get(Movement)
-            mass_a = entity.get(Collision).mass
-            movement_a.vx += -(position_a.x - position_b.x) / mass_a / 20.0
-            movement_a.vy += -(position_a.y - position_b.y) / mass_a / 20.0
+            collision_a = entity.get(Collision)
+            if collision_a:
+                mass_a = collision_a.mass
+                movement_a.vx += -(position_a.x - position_b.x) / mass_a / 20.0
+                movement_a.vy += -(position_a.y - position_b.y) / mass_a / 20.0
 
             movement_b = drag.target.get(Movement)
-            mass_b = drag.target.get(Collision).mass
-            movement_b.vx += (position_a.x - position_b.x) / mass_b / 6.0
-            movement_b.vy += (position_a.y - position_b.y) / mass_b / 6.0
+            if movement_b:
+                mass_b = drag.target.get(Collision).mass
+                movement_b.vx += (position_a.x - position_b.x) / mass_b / 6.0
+                movement_b.vy += (position_a.y - position_b.y) / mass_b / 6.0

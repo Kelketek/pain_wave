@@ -1,6 +1,4 @@
-from math import sqrt, floor, atan2, pi
-
-import math
+from math import sqrt, floor, atan2, pi, cos, sin
 
 from .entity import entities_with
 
@@ -23,16 +21,6 @@ class Collision:
         self.mass = float(mass)
 
 
-class Facing:
-    """Determines which direction an object is facing.
-    """
-    def __init__(self, degrees, entity):
-        self.degrees = degrees
-        self.entity = entity
-        self.surface = None
-        self.last_degrees = None
-
-
 # https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
 def rotate(origin, point, angle):
     """
@@ -43,8 +31,8 @@ def rotate(origin, point, angle):
     ox, oy = origin
     px, py = point
 
-    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
-    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    qx = ox + cos(angle) * (px - ox) - sin(angle) * (py - oy)
+    qy = oy + sin(angle) * (px - ox) + cos(angle) * (py - oy)
     return qx, qy
 
 

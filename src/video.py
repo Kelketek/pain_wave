@@ -2,7 +2,8 @@ from math import floor
 
 import pygame
 
-from src.physics import Position, Facing
+from .physics import Position
+from .facing import Facing
 
 RED = 255, 0, 0
 GREEN = 0, 255, 0
