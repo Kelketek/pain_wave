@@ -33,7 +33,6 @@ class PainWave:
         self.playtime = 0.0
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
         self.entities = []
-        self.init_players()
         self.init_environment()
 
     def init_players(self):
@@ -68,16 +67,17 @@ class PainWave:
         tetris_god = Entity(name='Dispensor for team {}'.format(team + 1))
         dispenser = Dispenser(team=team, entity=tetris_god)
         tetris_god.add(dispenser)
-        tetris_god.add(Position(x, y, 3))
+        tetris_god.add(Position(x, y, 18))
         tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
         self.entities.append(tetris_god)
 
     def init_environment(self):
+        self.init_players()
         offset = 100
         self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0))
         self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0))
-        self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
-        self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
+        self.make_dispenser(0 + (offset / 2), self.height / 3, 0)
+        self.make_dispenser(self.width - (offset / 2), self.height * 2 / 3, 1)
 
     def main_loop(self):
         while True:
