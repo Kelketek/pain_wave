@@ -35,6 +35,7 @@ class PainWave:
         self.size = self.width, self.height = width, height
         self.playtime = 0.0
         self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN | pygame.HWACCEL)
+        self.background = pygame.image.load("assets/background.png")
         self.entities = []
         self.init_environment()
 
@@ -117,4 +118,4 @@ class PainWave:
             update_face_toward_movement(self.entities)
 
             # must update screen last to avoid visual latency
-            update_screen(self.entities, self.screen)
+            update_screen(self.entities, self.screen, self.background)

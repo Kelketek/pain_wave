@@ -31,8 +31,8 @@ class Image:
         screen.blit(self.image, rect)
 
 
-def update_screen(entities, screen):
-    screen.fill(BACKGROUND)
+def update_screen(entities, screen, background):
+    screen.blit(background, ((0, 0), (screen.get_width(), screen.get_height())))
     for entity in entities:
         image = entity.get(Image)
         position = entity.get(Position)
