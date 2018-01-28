@@ -42,7 +42,7 @@ def rotate(origin, point, degrees):
 def degrees_from_point(x, y):
     """Assuming a first point of 0, 0 calculates the degree of an angle
     """
-    return round(atan2(x, y) * floor(180 / pi))
+    return atan2(x, y) * floor(180 / pi)
 
 
 def distance(x1, y1, x2, y2):

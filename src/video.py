@@ -2,7 +2,7 @@ from math import floor
 
 import pygame
 
-from .physics import Position
+from .physics import Position, rotate
 from .facing import Facing
 
 RED = 255, 0, 0

@@ -48,4 +48,4 @@ def update_input(entities):
             if movement[0] or movement[1]:
                 move_object(entity, get_movement(controller))
                 facing = entity.get(Facing)
-                facing.degrees = degrees_from_point(*movement) + 180
+                facing.degrees = degrees_from_point(*movement)
