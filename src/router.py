@@ -5,6 +5,7 @@ from .entity import entities_with, Entity
 from .friction import Friction
 from .physics import entity_overlap, Movement, distance, degrees_from_point, rotate, Collision
 from .facing import Facing
+from .video import Image
 
 
 router_counter = [1]
@@ -52,4 +53,5 @@ def build_router():
     entity.add(Collision(25))
     entity.add(Friction(.9))
     entity.add(Router())
+    entity.add(Image('assets/router.png', entity))
     return entity

@@ -45,7 +45,7 @@ class PainWave:
             joystick.init()
             entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
-            position = Position(110, 110 + offset, 8)
+            position = Position(110, 110 + offset, 12)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
@@ -58,7 +58,7 @@ class PainWave:
             entity.add(Facing(0, entity))
             offset += 2
 
-    def make_cannon(self, x, y, velocity, offset):
+    def make_cannon(self, x, y, velocity, offset, angle):
         cannon = Entity(name='Pain Wave Transmitter')
         position = Position(x, y, 5)
         cannon.add(position)
@@ -68,6 +68,8 @@ class PainWave:
         cannon.add(EndGameplayOnDeath())
         cannon.add(Vulnerable(tombstone=True))
         cannon.add(Collision(100))
+        cannon.add(Image('assets/transmitter.png', cannon))
+        cannon.add(Facing(angle, cannon))
         self.entities.append(cannon)
 
     def make_dispenser(self, x, y, team):
@@ -76,13 +78,14 @@ class PainWave:
         tetris_god.add(dispenser)
         tetris_god.add(Position(x, y, 18))
         tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
+        tetris_god.add(Image('assets/dispenser.png', tetris_god))
         self.entities.append(tetris_god)
 
     def init_environment(self):
         self.init_players()
         offset = 100
-        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0))
-        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0))
+        self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0), angle=-90)
+        self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0), angle=90)
         self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
         self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
 

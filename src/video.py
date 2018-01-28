@@ -7,29 +7,32 @@ from .facing import Facing
 
 RED = 255, 0, 0
 GREEN = 0, 255, 0
-NOT_QUITE_BLACK = 22, 22, 22
+BACKGROUND = 22, 22, 22
 
 
 class Image:
     def __init__(self, path, entity):
         position = entity.get(Position)
-        self.image = pygame.transform.scale(
-            pygame.image.load(path),
-            (floor(position.radius * 2), floor(position.radius * 2))
-        )
+        self.path = path
+        self.image = None
         self.entity = entity
 
     def blit(self, screen):
         position = self.entity.get(Position)
         if not position:
             # Removed from screen.
-            pass
+            return
+        if not self.image:
+            self.image = pygame.transform.scale(
+                pygame.image.load(self.path),
+                (floor(position.radius * 2), floor(position.radius * 2))
+            )
         rect = position_rect(position)
         screen.blit(self.image, rect)
 
 
 def update_screen(entities, screen):
-    screen.fill(NOT_QUITE_BLACK)
+    screen.fill(BACKGROUND)
     for entity in entities:
         image = entity.get(Image)
         position = entity.get(Position)

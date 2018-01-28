@@ -6,6 +6,7 @@ from .physics import Position, Movement, Collision, entity_overlap
 from .router import Routable
 from .facing import Facing
 from .face_toward_movement import FaceTowardMovement
+from .video import Image
 
 
 class Murders:
@@ -62,6 +63,7 @@ class Transmitter:
         entity.add(Routable())
         entity.add(Facing(0, entity))
         entity.add(FaceTowardMovement())
+        entity.add(Image('assets/pain_wave.png', entity))
         entities.append(entity)
 
 
