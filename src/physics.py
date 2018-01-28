@@ -1,4 +1,5 @@
-from math import sqrt
+from math import sqrt, floor, atan2, pi
+
 from .entity import entities_with
 
 
@@ -18,6 +19,19 @@ class Movement:
 class Collision:
     def __init__(self, mass):
         self.mass = float(mass)
+
+
+class Facing:
+    """Determines which direction an object is facing.
+    """
+    def __init__(self, degrees, entity):
+        self.degrees = degrees
+        self.entity = entity
+        self.surface = None
+        self.last_degree = None
+
+    def from_vector(self, vector):
+        self.degrees = round(atan2(vector[0], vector[1]) * floor(180 / pi)) + 180
 
 
 def distance(x1, y1, x2, y2):

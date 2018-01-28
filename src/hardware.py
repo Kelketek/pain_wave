@@ -1,6 +1,6 @@
 from math import floor
 
-from .physics import Movement
+from .physics import Movement, Facing
 
 DEAD_ZONE = .1
 
@@ -43,4 +43,8 @@ def update_input(entities):
     for entity in entities:
         controller = entity.get(Controller)
         if controller and not controller.disabled:
-            move_object(entity, get_movement(controller))
+            movement = get_movement(controller)
+            if movement[0] and movement[1]:
+                move_object(entity, get_movement(controller))
+                facing = entity.get(Facing)
+                facing.from_vector(movement)

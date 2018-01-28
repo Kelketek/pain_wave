@@ -6,7 +6,7 @@ from .support import build_wall, Dispenser
 from .entity import Entity
 from .hardware import Controller, update_input
 from .logic import Timer, update_triggers, update_timers
-from .physics import Position, Movement, update_movement, update_collisions, Collision
+from .physics import Position, Movement, update_movement, update_collisions, Collision, Facing
 from .boundary import update_boundary
 from .friction import update_friction, Friction
 from .grapple import update_grapple, CanGrapple
@@ -37,15 +37,6 @@ class PainWave:
         for _ in range(10):
             self.entities.append(build_wall())
 
-        # for _ in range(7):
-        #     entity = Entity()
-        #     self.entities.append(entity)
-        #     entity.add(Position(random() * 250 + 100, random() * 250 + 100, random() * 8 + 6))
-        #     entity.add(Movement())
-        #     entity.add(Collision(50))
-        #     entity.add(Friction(.9))
-        #     entity.add(Router())
-
         self.init_players()
         self.init_environment()
 
@@ -66,6 +57,7 @@ class PainWave:
             entity.add(CanGrapple())
             entity.add(PlayerState(team=i % 2))
             entity.add(Vulnerable(tombstone=True))
+            entity.add(Facing(0, entity))
             offset += 2
 
     def make_cannon(self, x, y, velocity):
