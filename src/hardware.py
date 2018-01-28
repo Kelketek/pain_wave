@@ -1,6 +1,6 @@
 from math import floor
 
-from .physics import Movement, Facing
+from src.physics import Movement, Facing, degrees_from_point
 
 DEAD_ZONE = .1
 
@@ -47,4 +47,4 @@ def update_input(entities):
             if movement[0] or movement[1]:
                 move_object(entity, get_movement(controller))
                 facing = entity.get(Facing)
-                facing.from_vector(movement)
+                facing.degrees = degrees_from_point(*movement)

@@ -1,5 +1,7 @@
 from math import sqrt, floor, atan2, pi
 
+import math
+
 from .entity import entities_with
 
 
@@ -28,10 +30,30 @@ class Facing:
         self.degrees = degrees
         self.entity = entity
         self.surface = None
-        self.last_degree = None
+        self.last_degrees = None
 
-    def from_vector(self, vector):
-        self.degrees = round(atan2(vector[0], vector[1]) * floor(180 / pi)) + 180
+
+# https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
+def rotate(origin, point, angle):
+    """
+    Rotate a point counterclockwise by a given angle around a given origin.
+
+    The angle should be given in radians.
+    """
+    ox, oy = origin
+    px, py = point
+
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    return qx, qy
+
+
+def degrees_from_point(x, y):
+    """Assuming a first point of 0, 0 calculates the degree of an angle
+
+    Also translates it to facing upright like most graphics programs do.
+    """
+    return round(atan2(x, y) * floor(180 / pi)) + 180
 
 
 def distance(x1, y1, x2, y2):

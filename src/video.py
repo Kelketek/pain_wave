@@ -38,7 +38,7 @@ def update_screen(entities, screen):
             pygame.draw.circle(screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
         facing = entity.get(Facing)
         if facing and position:
-            if facing.last_degree != facing.degrees:
+            if facing.last_degrees != facing.degrees:
                 radius, surface = direction_arrow(entity, facing.degrees)
                 screen.blit(surface, position_rect(position, radius))
 

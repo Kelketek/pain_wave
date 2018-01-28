@@ -5,6 +5,7 @@ from src.entity import Entity
 from src.friction import Friction
 from src.hardware import Controller
 from src.physics import Collision, Movement, Position
+from src.router import build_router, Router
 from src.video import Image
 from src.violence import PlayerState, Vulnerable
 
@@ -28,13 +29,17 @@ class Dispenser:
                 entity.dead = False
                 entity.remove_type(Position)
         while len(self.hopper) < 5:
-            self.hopper.insert(0, build_wall(place=False))
+            # if random() < .25:
+            self.hopper.insert(0, build_router())
+            # else:
+            #     self.hopper.insert(0, build_wall())
         self.drop(entities)
 
     def drop(self, entities):
         loot = self.hopper.pop()
         position = self.entity.get(Position)
         controller = loot.get(Controller)
+        router = loot.get(Router)
         if controller:
             controller.disabled = False
             # Is a player.
@@ -42,6 +47,8 @@ class Dispenser:
             width = image.image.get_width()
             radius = floor(width / 2)
             loot.add(Position(position.x, position.y, radius))
+        elif router:
+            loot.add(Position(position.x, position.y, 10))
         else:
             loot.add(Position(position.x, position.y, rand_radius()))
         vulnerable = loot.get(Vulnerable)
@@ -56,11 +63,9 @@ def rand_radius():
     return random() * 12 + 8
 
 
-def build_wall(place=True):
+def build_wall():
     wall_counter[0] += 1
     entity = Entity(name='Wall {}'.format(wall_counter[0]))
-    if place:
-        entity.add(Position(random() * 250, random() * 250, rand_radius()))
     entity.add(Movement())
     entity.add(Collision(random() * 10 + 40))
     entity.add(Friction(.9))

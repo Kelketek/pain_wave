@@ -1,7 +1,7 @@
 
 class Entity(object):
     def __init__(self, name=None):
-        self.name = None
+        self.name = name
         self.components = []
 
     def get(self, kind):

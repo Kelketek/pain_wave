@@ -1,5 +1,11 @@
-from .entity import entities_with
-from .physics import entity_overlap, Movement
+import random
+
+from src.entity import entities_with, Entity
+from src.friction import Friction
+from src.physics import entity_overlap, Facing, Movement, distance, degrees_from_point, rotate, Collision
+
+
+router_counter = [1]
 
 
 class Router:
@@ -13,8 +19,22 @@ class Routable:
 def update_routers(entities):
     for entity in entities_with(entities, Router):
         for other in entities_with(entities, Routable):
-            if entity_overlap(entity, other) > 0:
-                # TODO: Need facing module
+            if entity_overlap(entity, other) > -5:
+                facing = entity.get(Facing)
                 movement = other.get(Movement)
-                movement.vx = 2
-                movement.vy = 2
+                if not facing and movement:
+                    continue
+                magnitude = abs(distance(0, 0, movement.vx, movement.vy))
+                result = rotate((0, 0), (0, magnitude), facing.degrees)
+                movement.xv, movement.vy = result
+
+
+def build_router():
+    router_counter[0] += 1
+    entity = Entity(name='Router {}'.format(router_counter[0]))
+    entity.add(Movement())
+    entity.add(Facing(random.randint(0, 360), entity))
+    entity.add(Collision(5))
+    entity.add(Friction(.9))
+    entity.add(Router())
+    return entity

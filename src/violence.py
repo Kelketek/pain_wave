@@ -3,7 +3,7 @@ from .entity import Entity
 from .friction import Friction
 from .logic import Trigger
 from .physics import Position, Movement, Collision, entity_overlap
-from .router import Routable
+from src.router import Routable
 
 
 class Murders:

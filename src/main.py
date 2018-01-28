@@ -12,8 +12,7 @@ from .friction import update_friction, Friction
 from .grapple import update_grapple, CanGrapple
 from .video import Image, update_screen
 from .violence import Transmitter, PlayerState, Vulnerable
-from .router import update_routers, Router
-
+from src.router import Router, update_routers
 
 # Desired framerate in frames per second. Try out other values.
 FPS = 30
@@ -97,13 +96,13 @@ class PainWave:
 
             update_triggers(self.entities)
             update_timers(self.entities, self.playtime)
+            update_routers(self.entities)
             update_input(self.entities)
             update_movement(self.entities)
             update_boundary(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)
             update_grapple(self.entities)
-            update_routers(self.entities)
 
             # must update screen last to avoid visual latency
             update_screen(self.entities, self.screen)
