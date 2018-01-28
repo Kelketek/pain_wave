@@ -41,6 +41,7 @@ def update_routers(entities):
         if abs(facing.degrees - angle) > 90:
             continue
         facing.degrees = angle
+        drag.started = True
 
 
 def build_router():

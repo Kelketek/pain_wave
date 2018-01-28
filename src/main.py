@@ -47,6 +47,8 @@ class PainWave:
         self.entities = []
         self.init_environment()
         self.loser = None
+        pygame.mixer.music.load('assets/Background Music 18sec. Loop.wav')
+        pygame.mixer.music.play(-1)
 
     def init_players(self):
         for i, joystick in enumerate(range(pygame.joystick.get_count())):
@@ -100,6 +102,7 @@ class PainWave:
         tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
         tetris_god.add(Image('assets/dispenser.png', tetris_god))
         self.entities.append(tetris_god)
+        dispenser.dispense(self.entities)
 
     def init_environment(self):
         offset = 200
