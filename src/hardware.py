@@ -44,7 +44,7 @@ def update_input(entities):
         controller = entity.get(Controller)
         if controller and not controller.disabled:
             movement = get_movement(controller)
-            if movement[0] and movement[1]:
+            if movement[0] or movement[1]:
                 move_object(entity, get_movement(controller))
                 facing = entity.get(Facing)
                 facing.from_vector(movement)
