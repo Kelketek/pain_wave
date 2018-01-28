@@ -50,10 +50,6 @@ def update_screen(entities, screen, background, winner=None):
             image.blit(screen, degrees)
         else:
             pygame.draw.circle(screen, RED, (floor(position.x), floor(position.y)), floor(position.radius), 1)
-        if facing and position:
-            if facing.last_degrees != facing.degrees:
-                radius, surface = direction_arrow(entity, facing.degrees)
-                screen.blit(surface, position_rect(position, radius))
 
     if winner:
         declare_winner(screen, winner)
@@ -80,23 +76,6 @@ def position_rect(position, radius=None):
         floor(position.x + radius),
         floor(position.y - radius)
     )
-
-
-def direction_arrow(entity, degrees):
-    position = entity.get(Position)
-    if not position:
-        # Off the map.
-        return
-    radius = floor(position.radius * 2)
-    if radius < 6:
-        radius = 6
-    top = (radius, 0)
-    bottom_left = (radius - 3, (radius / 3))
-    bottom_right = (radius + 3, (radius / 3))
-
-    surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA, 32).convert_alpha()
-    pygame.draw.polygon(surface, GREEN, (top, bottom_left, bottom_right))
-    return radius, rot_center(surface, degrees + 180)
 
 
 def declare_winner(screen, winner):
