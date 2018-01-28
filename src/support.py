@@ -29,10 +29,10 @@ class Dispenser:
                 vulnerable.dead = False
                 entity.remove_type(Position)
         while len(self.hopper) < 5:
-            # if random() < .25:
-            self.hopper.insert(0, build_router())
-            # else:
-            #     self.hopper.insert(0, build_wall())
+            if random() < .25:
+                self.hopper.insert(0, build_router())
+            else:
+                self.hopper.insert(0, build_wall())
         self.drop(entities)
 
     def drop(self, entities):
