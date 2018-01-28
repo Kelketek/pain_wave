@@ -34,14 +34,9 @@ def update_routers(entities):
         drag = entity.get(Drag)
         if not drag.target.get(Router):
             continue
-        movement = drag.target.expect(Movement)
         facing = drag.target.expect(Facing)
-        angle = degrees_from_point(movement.vx, movement.vy)
-        angle = (angle + 180) % 360
-        if abs(facing.degrees - angle) > 90:
-            continue
-        facing.degrees = angle
-        drag.started = True
+        drag_facing = entity.expect(Facing)
+        facing.degrees = drag_facing.degrees
 
 
 def build_router():

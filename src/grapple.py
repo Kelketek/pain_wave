@@ -17,7 +17,6 @@ class CanGrapple:
 class Drag:
     def __init__(self, target):
         self.target = target
-        self.started = False
 
 
 def nearest_to(entities, subject):

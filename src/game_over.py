@@ -1,5 +1,4 @@
 from src.grapple import Drag
-from .entity import entities_with
 from .violence import Transmitter, Vulnerable, Team
 from .physics import Movement
 from .hardware import Controller
