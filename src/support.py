@@ -1,4 +1,3 @@
-from math import floor
 from random import random
 
 from .entity import Entity
@@ -28,10 +27,10 @@ class Dispenser:
                 entities.remove(entity)
                 vulnerable.dead = False
         while len(self.hopper) < 5:
-            if random() < .25:
+            # if random() < .25:
                 self.hopper.insert(0, build_router())
-            else:
-                self.hopper.insert(0, build_wall())
+            # else:
+            #     self.hopper.insert(0, build_wall())
         self.drop(entities)
 
     def drop(self, entities):
@@ -43,7 +42,6 @@ class Dispenser:
             controller.disabled = False
             # Is a player.
             loot.replace(Image('assets/character.png', loot, fixed_rotation=True))
-            image = loot.get(Image)
             radius = loot.get(Position).radius
             loot.replace(Position(position.x, position.y, radius))
             loot.add(Collision(10))
@@ -60,7 +58,7 @@ class Dispenser:
 
 
 def rand_radius():
-    return random() * 24 + 8
+    return random() * 24 + 16
 
 
 def build_wall():
