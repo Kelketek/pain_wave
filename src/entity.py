@@ -24,6 +24,10 @@ class Entity(object):
     def remove_type(self, kind):
         self.components = [comp for comp in self.components if type(comp) != kind]
 
+    def replace(self, comp):
+        self.remove_type(type(comp))
+        self.add(comp)
+
     def __repr__(self):
         return "<{name} with components {components}>".format(
             name=self.name or 'Unknown Entity', components=self.components

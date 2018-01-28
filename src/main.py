@@ -64,7 +64,9 @@ class PainWave:
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
             entity.add(Team(team=(i % 2) + 1))
-            entity.add(Vulnerable(tombstone=True))
+            entity.add(Vulnerable(
+                tombstone=True, next_image=Image('assets/character_dead.png', entity, fixed_rotation=True))
+            )
             entity.add(Facing(0, entity))
             offset += 2
 
