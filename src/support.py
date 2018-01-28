@@ -43,7 +43,7 @@ class Dispenser:
             radius = floor(width / 2)
             loot.add(Position(position.x, position.y, radius))
         else:
-            loot.add(Position(position.x, position.y - 50, rand_radius()))
+            loot.add(Position(position.x, position.y, rand_radius()))
         vulnerable = loot.get(Vulnerable)
         if vulnerable:
             vulnerable.dead = False
