@@ -2,7 +2,7 @@
 import pygame
 import sys
 
-from .support import build_wall, Dispenser
+from .support import Dispenser
 from .entity import Entity
 from .hardware import Controller, update_input
 from .logic import Timer, update_triggers, update_timers
@@ -12,12 +12,14 @@ from .friction import update_friction, Friction
 from .grapple import update_grapple, CanGrapple
 from .video import Image, update_screen
 from .violence import Transmitter, PlayerState, Vulnerable
-from src.router import Router, update_routers
+from .router import update_routers
+from .game_over import EndGameplayOnDeath, update_end_gameplay
+
 
 # Desired framerate in frames per second. Try out other values.
 FPS = 30
 
-FIRE_INTERVAL = 5
+FIRE_INTERVAL = 6
 
 DISPENSE_INTERVAL = FIRE_INTERVAL * 3
 
@@ -55,12 +57,15 @@ class PainWave:
             offset += 2
 
     def make_cannon(self, x, y, velocity, offset):
-        cannon = Entity(name='Death Wave Transmitter')
+        cannon = Entity(name='Pain Wave Transmitter')
         position = Position(x, y, 5)
         cannon.add(position)
-        transmitter = Transmitter(position, velocity=velocity)
+        transmitter = Transmitter(position, velocity=velocity, offset=offset)
         cannon.add(transmitter)
         cannon.add(Timer(FIRE_INTERVAL, self.playtime, tasks=[transmitter.create_projectile]))
+        cannon.add(EndGameplayOnDeath())
+        cannon.add(Vulnerable(tombstone=True))
+        cannon.add(Collision(100))
         self.entities.append(cannon)
 
     def make_dispenser(self, x, y, team):
@@ -76,8 +81,8 @@ class PainWave:
         offset = 100
         self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0))
         self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0))
-        self.make_dispenser(0 + (offset / 2), self.height / 3, 0)
-        self.make_dispenser(self.width - (offset / 2), self.height * 2 / 3, 1)
+        self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
+        self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
 
     def main_loop(self):
         while True:
@@ -94,6 +99,7 @@ class PainWave:
             if pressed[pygame.K_ESCAPE]:
                 break
 
+            update_end_gameplay(self.entities)
             update_triggers(self.entities)
             update_timers(self.entities, self.playtime)
             update_routers(self.entities)

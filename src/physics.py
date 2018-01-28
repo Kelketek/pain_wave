@@ -91,11 +91,11 @@ def update_movement(entities):
 
 
 def update_collisions(entities):
-    active = entities_with(entities, Position)
-    active = entities_with(active, Collision)
-    active = list(entities_with(active, Movement))
+    passive = entities_with(entities, Position)
+    passive = list(entities_with(passive, Collision))
+    active = list(entities_with(passive, Movement))
     for entity in active:
-        for other in active:
+        for other in passive:
             if other == entity:
                 continue
             overlap = entity_overlap(entity, other)
