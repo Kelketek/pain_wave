@@ -1,8 +1,8 @@
 from .entity import entities_with
 from .physics import Movement, Position
 
-FIELD_WIDTH = 600
-FIELD_HEIGHT = 600
+FIELD_WIDTH = 1200
+FIELD_HEIGHT = 1200
 
 def update_boundary(entities):
     for entity in entities_with(entities, Movement):

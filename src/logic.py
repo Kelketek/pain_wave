@@ -28,6 +28,17 @@ class Trigger:
                 task(entities)
 
 
+class Restart:
+    """Flag for restarting the game.
+    """
+    pass
+
+
+class Quit:
+    """Flag for quitting the game
+    """
+
+
 def update_triggers(entities):
     for entity in entities[:]:
         trigger = entity.get(Trigger)

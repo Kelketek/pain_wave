@@ -1,5 +1,7 @@
 from math import floor
 
+from src.entity import entities_with
+from src.logic import Restart, Quit
 from .physics import Movement, degrees_from_point
 from .facing import Facing
 
@@ -16,7 +18,7 @@ def normalize_axis(value):
             value -= DEAD_ZONE
         else:
             value += DEAD_ZONE
-    value *= 100
+    value *= 200
     value /= 15
     return floor(value)
 
@@ -26,6 +28,7 @@ class Controller:
         self.joystick = joystick
         self.moved = False
         self.disabled = False
+        self.menu = False
 
 
 def move_object(entity, movement):
@@ -41,11 +44,18 @@ def get_movement(controller):
 
 
 def update_input(entities):
-    for entity in entities:
+    for entity in entities_with(entities, Controller):
         controller = entity.get(Controller)
-        if controller and not controller.disabled:
+        if not (controller.disabled or controller.menu):
             movement = get_movement(controller)
             if movement[0] or movement[1]:
                 move_object(entity, get_movement(controller))
                 facing = entity.get(Facing)
                 facing.degrees = degrees_from_point(*movement)
+        elif controller.menu:
+            if controller.joystick.get_button(12):
+                # Restart the game
+                entity.add(Restart())
+            if controller.joystick.get_button(14):
+                # Quit the game.
+                entity.add(Quit())

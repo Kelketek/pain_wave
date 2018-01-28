@@ -7,7 +7,7 @@ from .hardware import Controller
 from .physics import Collision, Movement, Position
 from .router import build_router, Router
 from .video import Image
-from .violence import PlayerState, Vulnerable
+from .violence import Team, Vulnerable
 
 
 wall_counter = [0]
@@ -21,12 +21,12 @@ class Dispenser:
 
     def dispense(self, entities):
         for entity in entities[:]:
-            state = entity.get(PlayerState)
+            state = entity.get(Team)
             vulnerable = entity.get(Vulnerable)
             if state and state.team == self.team and vulnerable.dead:
                 self.hopper.append(entity)
                 entities.remove(entity)
-                entity.dead = False
+                vulnerable.dead = False
                 entity.remove_type(Position)
         while len(self.hopper) < 5:
             # if random() < .25:
@@ -49,7 +49,7 @@ class Dispenser:
             loot.add(Position(position.x, position.y, radius))
             loot.add(Collision(10))
         elif router:
-            loot.add(Position(position.x, position.y, 10))
+            loot.add(Position(position.x, position.y, 20))
         else:
             loot.add(Position(position.x, position.y, rand_radius()))
         vulnerable = loot.get(Vulnerable)
@@ -61,7 +61,7 @@ class Dispenser:
 
 
 def rand_radius():
-    return random() * 12 + 8
+    return random() * 24 + 8
 
 
 def build_wall():

@@ -41,7 +41,7 @@ class Murders:
 
 
 class Transmitter:
-    def __init__(self, position, velocity, projectile_name='Pain Wave', offset=(0, 0), radius=10):
+    def __init__(self, position, velocity, projectile_name='Pain Wave', offset=(0, 0), radius=20):
         self.position = position
         self.radius = radius
         self.projectile_name = projectile_name
@@ -85,10 +85,9 @@ class ClearsOnStop:
             pass
 
 
-class PlayerState:
+class Team:
     def __init__(self, team):
         self.team = team
-        self.dead = False
 
 
 class Vulnerable:

@@ -24,7 +24,7 @@ class Image:
             # Removed from screen.
             return
         if not self.image:
-            self.image = pygame.transform.scale(
+            self.image = pygame.transform.smoothscale(
                 pygame.image.load(self.path),
                 (floor(position.radius * 2), floor(position.radius * 2))
             )
@@ -38,7 +38,7 @@ class Image:
         screen.blit(self.cached, rect)
 
 
-def update_screen(entities, screen, background):
+def update_screen(entities, screen, background, winner=None):
     screen.blit(background, ((0, 0), (screen.get_width(), screen.get_height())))
     for entity in entities:
         image = entity.get(Image)
@@ -53,6 +53,9 @@ def update_screen(entities, screen, background):
             if facing.last_degrees != facing.degrees:
                 radius, surface = direction_arrow(entity, facing.degrees)
                 screen.blit(surface, position_rect(position, radius))
+
+    if winner:
+        declare_winner(screen, winner)
 
     pygame.display.flip()
 
@@ -93,3 +96,13 @@ def direction_arrow(entity, degrees):
     surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA, 32).convert_alpha()
     pygame.draw.polygon(surface, GREEN, (top, bottom_left, bottom_right))
     return radius, rot_center(surface, degrees + 180)
+
+
+def declare_winner(screen, winner):
+    basicfont = pygame.font.SysFont(None, 120)
+    text = basicfont.render('Team {} Wins!'.format(winner), True, (255, 0, 0), None)
+    textrect = text.get_rect()
+    textrect.centerx = screen.get_rect().centerx
+    textrect.centery = screen.get_rect().centery
+
+    screen.blit(text, textrect)
