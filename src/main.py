@@ -100,12 +100,12 @@ class PainWave:
             if pressed[pygame.K_ESCAPE]:
                 break
 
-            update_end_gameplay(self.entities)
+            # update_end_gameplay(self.entities)
             update_triggers(self.entities)
             update_timers(self.entities, self.playtime)
-            update_routers(self.entities)
             update_input(self.entities)
             update_movement(self.entities)
+            update_routers(self.entities)
             update_boundary(self.entities)
             update_friction(self.entities)
             update_collisions(self.entities)

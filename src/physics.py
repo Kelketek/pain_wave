@@ -1,5 +1,7 @@
 from math import sqrt, floor, atan2, pi, cos, sin
 
+import math
+
 from .entity import entities_with
 
 
@@ -22,14 +24,15 @@ class Collision:
 
 
 # https://stackoverflow.com/questions/34372480/rotate-point-about-another-point-in-degrees-python
-def rotate(origin, point, angle):
+def rotate(origin, point, degrees):
     """
     Rotate a point counterclockwise by a given angle around a given origin.
 
-    The angle should be given in radians.
+    The angle should be given in degrees.
     """
     ox, oy = origin
     px, py = point
+    angle = math.radians(degrees)
 
     qx = ox + cos(angle) * (px - ox) - sin(angle) * (py - oy)
     qy = oy + sin(angle) * (px - ox) + cos(angle) * (py - oy)
@@ -38,10 +41,8 @@ def rotate(origin, point, angle):
 
 def degrees_from_point(x, y):
     """Assuming a first point of 0, 0 calculates the degree of an angle
-
-    Also translates it to facing upright like most graphics programs do.
     """
-    return round(atan2(x, y) * floor(180 / pi)) + 180
+    return round(atan2(x, y) * floor(180 / pi))
 
 
 def distance(x1, y1, x2, y2):

@@ -20,14 +20,14 @@ class Routable:
 def update_routers(entities):
     for entity in entities_with(entities, Router):
         for other in entities_with(entities, Routable):
-            if entity_overlap(entity, other) > -5:
+            if entity_overlap(entity, other) > -20:
                 facing = entity.get(Facing)
                 movement = other.get(Movement)
-                if not facing and movement:
+                if not (facing and movement):
                     continue
-                magnitude = abs(distance(0, 0, movement.vx, movement.vy))
-                result = rotate((0, 0), (0, magnitude), facing.degrees)
-                movement.xv, movement.vy = result
+                magnitude = distance(0, 0, movement.vx, movement.vy)
+                result = rotate((0, 0), (0, magnitude), facing.degrees + 270)
+                movement.vx, movement.vy = result
 
 
 def build_router():
