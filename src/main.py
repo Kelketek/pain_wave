@@ -2,6 +2,9 @@
 import pygame
 import sys
 
+pygame.init()
+pygame.mixer.init()
+
 from .support import Dispenser
 from .entity import Entity, entities_with
 from .hardware import Controller, update_input
@@ -27,7 +30,7 @@ DISPENSE_INTERVAL = FIRE_INTERVAL * 3
 
 
 class PainWave:
-    def __init__(self, width=600, height=600):
+    def __init__(self, width=1200, height=1200):
         self.size = self.width, self.height = width, height
         self.background = pygame.image.load("assets/background.png")
         self.playtime = 0.0
@@ -57,7 +60,7 @@ class PainWave:
             entity.add(Movement())
             entity.add(Collision(10))
             entity.add(Friction(.95))
-            entity.add(Image("assets/pain_wave.png", entity))
+            entity.add(Image('assets/character.png', entity, fixed_rotation=True))
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
             entity.add(Team(team=(i % 2) + 1))

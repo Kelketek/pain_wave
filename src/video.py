@@ -11,12 +11,13 @@ BACKGROUND = 22, 22, 22
 
 
 class Image:
-    def __init__(self, path, entity):
+    def __init__(self, path, entity, fixed_rotation=False):
         self.path = path
         self.image = None
         self.entity = entity
         self.cached = None
         self.last_degrees = None
+        self.fixed_rotation = fixed_rotation
 
     def blit(self, screen, degrees=None):
         position = self.entity.get(Position)
@@ -29,7 +30,7 @@ class Image:
                 (floor(position.radius * 2), floor(position.radius * 2))
             )
         if not (self.cached and self.last_degrees == degrees):
-            if degrees is not None:
+            if degrees is not None and not self.fixed_rotation:
                 self.cached = rot_center(self.image, degrees + 180)
             else:
                 self.cached = self.image
