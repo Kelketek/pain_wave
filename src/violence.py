@@ -9,6 +9,7 @@ from .router import Routable
 from .facing import Facing
 from .face_toward_movement import FaceTowardMovement
 from .video import Image
+from .boundary import DieOnReflect
 
 
 # shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
@@ -82,6 +83,7 @@ class Transmitter:
         entity.add(Facing(0, entity))
         entity.add(FaceTowardMovement())
         entity.add(Image('assets/pain_wave.png', entity))
+        entity.add(DieOnReflect())
         entities.append(entity)
 
 
