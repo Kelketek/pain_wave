@@ -28,10 +28,10 @@ class Dispenser:
                 entities.remove(entity)
                 vulnerable.dead = False
         while len(self.hopper) < 5:
-            # if random() < .25:
+            if random() < .25:
                 self.hopper.insert(0, build_router())
-            # else:
-            #     self.hopper.insert(0, build_wall())
+            else:
+                self.hopper.insert(0, build_wall())
         self.drop(entities)
 
     def drop(self, entities):
@@ -69,4 +69,5 @@ def build_wall():
     entity.add(Movement())
     entity.add(Collision(random() * 10 + 40))
     entity.add(Friction(.9))
+    entity.add(Image('assets/wall.png', entity))
     return entity
