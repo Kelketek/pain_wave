@@ -42,13 +42,14 @@ class Dispenser:
             width = image.image.get_width()
             radius = floor(width / 2)
             loot.add(Position(position.x, position.y, radius))
+            loot.add(Collision(10))
         else:
             loot.add(Position(position.x, position.y, rand_radius()))
         vulnerable = loot.get(Vulnerable)
         if vulnerable:
             vulnerable.dead = False
         movement = loot.get(Movement)
-        movement.vy = -1
+        movement.vy = -.2
         entities.append(loot)
 
 

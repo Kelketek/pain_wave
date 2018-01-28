@@ -26,19 +26,19 @@ class Murders:
             controller = entity.get(Controller)
             if controller:
                 controller.disabled = True
+            entity.remove_type(Collision)
             vulnerable = entity.get(Vulnerable)
-            if vulnerable.tombstone:
-                vulnerable.dead = True
-                continue
-            try:
-                entities.remove(entity)
-            except ValueError:
-                # Already removed by some other condition.
-                pass
+            vulnerable.dead = True
+            if not vulnerable.tombstone:
+                try:
+                    entities.remove(entity)
+                except ValueError:
+                    # Already removed by some other condition.
+                    pass
 
 
 class Transmitter:
-    def __init__(self, position, velocity, projectile_name='Death Wave', offset=(0, 0), radius=10):
+    def __init__(self, position, velocity, projectile_name='Pain Wave', offset=(0, 0), radius=10):
         self.position = position
         self.radius = radius
         self.projectile_name = projectile_name
