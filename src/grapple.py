@@ -70,6 +70,10 @@ def update_grapple(entities):
 
             movement_b = drag.target.get(Movement)
             if movement_b:
+                collision = drag.target.get(Collision)
+                if not collision:
+                    # Mass was removed in previously processed event.
+                    continue
                 mass_b = drag.target.get(Collision).mass
                 movement_b.vx += (position_a.x - position_b.x) / mass_b / 6.0
                 movement_b.vy += (position_a.y - position_b.y) / mass_b / 6.0
