@@ -11,8 +11,8 @@ from .face_toward_movement import FaceTowardMovement
 from .video import Image
 
 
-shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
-kill_sound = pygame.mixer.Sound('assets/kill.ogg')
+# shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
+kill_sound = pygame.mixer.Sound('assets/Collision Opt 2.wav')
 
 ASPLODE_TIME = .4
 
@@ -66,7 +66,7 @@ class Transmitter:
         self.offset = offset
 
     def create_projectile(self, entities):
-        shoot_sound.play()
+        # shoot_sound.play()
         entity = Entity(name=self.projectile_name)
         entity.add(Position(self.position.x + self.offset[0], self.position.y + self.offset[1],
                             self.radius))

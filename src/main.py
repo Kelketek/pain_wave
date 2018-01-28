@@ -117,6 +117,11 @@ class PainWave:
             return None
 
     def main_loop(self):
+        import pygame
+
+        pygame.mixer.music.load('assets/Background Music 18sec. Loop.wav')
+        pygame.mixer.music.play(-1)
+
         while True:
             milliseconds = self.clock.tick(FPS)
             self.playtime += milliseconds / 1000.0
