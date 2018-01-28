@@ -14,7 +14,7 @@ from .video import Image
 # shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
 kill_sound = pygame.mixer.Sound('assets/Collision Opt 2.wav')
 
-ASPLODE_TIME = .4
+ASPLODE_TIME = .2
 
 
 class Murders:
