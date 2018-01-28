@@ -28,20 +28,17 @@ def update_routers(entities):
                 if not (facing and movement):
                     continue
                 magnitude = distance(0, 0, movement.vx, movement.vy)
-                result = rotate((0, 0), (0, magnitude), facing.degrees + 270)
+                result = rotate((0, 0), (0, magnitude), -facing.degrees)
                 movement.vx, movement.vy = result
-                print("====")
-                print(entity)
-                print(other)
-                print(movement.vx, movement.vy)
-    #
-    # for entity in entities_with(entities, Drag):
-    #     drag = entity.get(Drag)
-    #     if not drag.target.get(Router):
-    #         continue
-    #     drag_facing = entity.expect(Facing)
-    #     target_facing = drag.target.get(Facing)
-    #     target_facing.degrees = (drag_facing.degrees + 180) % 360
+
+    # Towing sets facing
+    for entity in entities_with(entities, Drag):
+        drag = entity.get(Drag)
+        if not drag.target.get(Router):
+            continue
+        drag_facing = entity.expect(Facing)
+        target_facing = drag.target.get(Facing)
+        target_facing.degrees = (drag_facing.degrees + 180) % 360
 
 
 def build_router():
@@ -49,7 +46,7 @@ def build_router():
     entity = Entity(name='Router {}'.format(router_counter[0]))
     entity.add(Movement())
     # entity.add(Facing(random.randint(0, 360), entity))
-    entity.add(Facing(90, entity))
+    entity.add(Facing(0, entity))
     entity.add(Collision(25))
     entity.add(Friction(.9))
     entity.add(Router())

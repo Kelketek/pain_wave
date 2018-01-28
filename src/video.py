@@ -84,4 +84,4 @@ def direction_arrow(entity, degrees):
 
     surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA, 32).convert_alpha()
     pygame.draw.polygon(surface, GREEN, (top, bottom_left, bottom_right))
-    return radius, rot_center(surface, degrees)
+    return radius, rot_center(surface, degrees + 180)
