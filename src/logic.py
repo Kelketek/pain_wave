@@ -7,6 +7,9 @@ class Timer:
         self.tasks = tasks
 
     def tick(self, playtime, entities):
+        if self.timestamp is None:
+            self.timestamp = playtime
+            return
         if (playtime - self.timestamp) >= self.interval:
             for task in self.tasks:
                 task(entities)

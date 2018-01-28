@@ -5,7 +5,8 @@ from .entity import entities_with
 from .physics import distance, Movement, Position, Collision, entity_distance, entity_gap
 
 
-grab_sound = pygame.mixer.Sound('assets/grapple.ogg')
+grab_sound = pygame.mixer.Sound('assets/Pick Up Item Var 1.wav')
+drop_sound = pygame.mixer.Sound('assets/Pick Up Item Var 2.wav')
 
 
 class CanGrapple:
@@ -51,7 +52,7 @@ def update_grapple(entities):
                     grab_sound.play()
         elif entity.get(Drag):
             entity.remove_type(Drag)
-            grab_sound.play()
+            drop_sound.play()
 
     # Dragging
     for entity in entities_with(entities, Drag):
