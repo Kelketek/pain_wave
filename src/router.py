@@ -1,5 +1,3 @@
-import random
-
 from src.grapple import Drag
 from .entity import entities_with, Entity
 from .friction import Friction
@@ -36,9 +34,13 @@ def update_routers(entities):
         drag = entity.get(Drag)
         if not drag.target.get(Router):
             continue
-        drag_facing = entity.expect(Facing)
-        target_facing = drag.target.get(Facing)
-        target_facing.degrees = (drag_facing.degrees + 180) % 360
+        movement = drag.target.expect(Movement)
+        facing = drag.target.expect(Facing)
+        angle = degrees_from_point(movement.vx, movement.vy)
+        angle = (angle + 180) % 360
+        if abs(facing.degrees - angle) > 90:
+            continue
+        facing.degrees = angle
 
 
 def build_router():

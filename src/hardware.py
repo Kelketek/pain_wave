@@ -9,7 +9,7 @@ DEAD_ZONE = .1
 
 
 def normalize_axis(value):
-    if 0 < value < DEAD_ZONE:
+    if 0 < abs(value) < DEAD_ZONE:
         value = 0
     if DEAD_ZONE > value > 0:
         value = 0
