@@ -8,6 +8,7 @@ from .physics import Collision, Movement, Position
 from .router import build_router, Router
 from .video import Image
 from .violence import Team, Vulnerable
+from .logic import Timer
 
 
 wall_counter = [0]
@@ -36,6 +37,7 @@ class Dispenser:
 
     def drop(self, entities):
         loot = self.hopper.pop()
+        loot.remove_type(Timer)
         position = self.entity.get(Position)
         controller = loot.get(Controller)
         router = loot.get(Router)

@@ -3,7 +3,7 @@ import pygame
 from .hardware import Controller
 from .entity import Entity
 from .friction import Friction
-from .logic import Trigger
+from .logic import Trigger, Timer
 from .physics import Position, Movement, Collision, entity_overlap, distance
 from .router import Routable
 from .facing import Facing
@@ -13,6 +13,8 @@ from .video import Image
 
 shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
 kill_sound = pygame.mixer.Sound('assets/kill.ogg')
+
+ASPLODE_TIME = .4
 
 
 class Murders:
@@ -39,6 +41,9 @@ class Murders:
             controller = entity.get(Controller)
             if controller:
                 controller.disabled = True
+                entity.add(Timer(ASPLODE_TIME, None, tasks=[
+                    lambda entities: entity.replace(Image('assets/character_dead_2.png', entity, fixed_rotation=True))
+                ]))
             entity.remove_type(Collision)
             vulnerable = entity.get(Vulnerable)
             vulnerable.dead = True

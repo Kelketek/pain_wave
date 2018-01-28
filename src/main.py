@@ -112,7 +112,7 @@ class PainWave:
     @property
     def winner(self):
         if self.loser:
-            return 1 if self.loser == 2 else 1
+            return 1 if self.loser == 2 else 2
         else:
             return None
 
