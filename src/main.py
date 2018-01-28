@@ -13,7 +13,7 @@ from .physics import Position, Movement, update_movement, update_collisions, Col
 from .boundary import update_boundary
 from .friction import update_friction, Friction
 from .grapple import update_grapple, CanGrapple
-from .video import Image, update_screen, declare_winner
+from .video import Image, update_screen
 from .violence import Transmitter, Team, Vulnerable
 from .router import update_routers
 from .game_over import EndGameplayOnDeath, update_end_gameplay
@@ -65,8 +65,9 @@ class PainWave:
             entity.add(CanGrapple())
             entity.add(Team(team=team))
             entity.add(Vulnerable(
-                tombstone=True, next_image=Image('assets/character_dead.png', entity, fixed_rotation=True))
-            )
+                tombstone=True,
+                next_image=Image('assets/character_dead.png', entity, fixed_rotation=True)
+            ))
             entity.add(Facing(0, entity))
 
     def make_cannon(self, x, y, velocity, offset, angle, team):
