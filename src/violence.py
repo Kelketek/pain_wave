@@ -42,6 +42,8 @@ class Murders:
             entity.remove_type(Collision)
             vulnerable = entity.get(Vulnerable)
             vulnerable.dead = True
+            if vulnerable.next_image:
+                entity.replace(vulnerable.next_image)
             if not vulnerable.tombstone:
                 try:
                     entities.remove(entity)
@@ -109,6 +111,7 @@ class Vulnerable:
     if touched by a destructive item. If 'tombstone' is set, keeps in the entity list,
     but removes ability to affect other entities.
     """
-    def __init__(self, tombstone=False):
+    def __init__(self, tombstone=False, next_image=None):
         self.tombstone = tombstone
         self.dead = False
+        self.next_image = next_image
