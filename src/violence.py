@@ -1,3 +1,5 @@
+import pygame
+
 from .hardware import Controller
 from .entity import Entity
 from .friction import Friction
@@ -7,6 +9,10 @@ from .router import Routable
 from .facing import Facing
 from .face_toward_movement import FaceTowardMovement
 from .video import Image
+
+
+shoot_sound = pygame.mixer.Sound('assets/shoot.ogg')
+kill_sound = pygame.mixer.Sound('assets/kill.ogg')
 
 
 class Murders:
@@ -19,12 +25,16 @@ class Murders:
     def grope(self, entities):
         self.hit_list = [
             entity for entity in entities if
-            (entity_overlap(self.entity, entity) > 0 and entity.get(Vulnerable))
+            (entity_overlap(self.entity, entity) > 0
+            and entity.get(Vulnerable))
             and not entity == self.entity
+            and not entity.get(Vulnerable).dead
         ]
         return self.hit_list
 
     def kill(self, entities):
+        if self.hit_list:
+            kill_sound.play()
         for entity in self.hit_list:
             controller = entity.get(Controller)
             if controller:
@@ -49,6 +59,7 @@ class Transmitter:
         self.offset = offset
 
     def create_projectile(self, entities):
+        shoot_sound.play()
         entity = Entity(name=self.projectile_name)
         entity.add(Position(self.position.x + self.offset[0], self.position.y + self.offset[1],
                             self.radius))

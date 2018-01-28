@@ -1,6 +1,10 @@
 # PLAY US A GAME! :V
 import pygame
+# import pygame.mixer
 import sys
+
+pygame.init()
+pygame.mixer.init()
 
 from .support import Dispenser
 from .entity import Entity
@@ -28,7 +32,6 @@ DISPENSE_INTERVAL = FIRE_INTERVAL * 3
 
 class PainWave:
     def __init__(self, width=600, height=600):
-        pygame.init()
         pygame.joystick.init()
         self.clock = pygame.time.Clock()
         pygame.mouse.set_visible(0)

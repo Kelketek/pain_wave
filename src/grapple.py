@@ -1,6 +1,11 @@
+import pygame
+
 from .hardware import Controller
 from .entity import entities_with
 from .physics import distance, Movement, Position, Collision, entity_distance, entity_gap
+
+
+grab_sound = pygame.mixer.Sound('assets/grapple.ogg')
 
 
 class CanGrapple:
@@ -42,8 +47,10 @@ def update_grapple(entities):
                 nearest = nearest_to(dragables, entity)
                 if nearest and entity_gap(entity, nearest) < 1:
                     entity.add(Drag(nearest))
-        else:
+                    grab_sound.play()
+        elif entity.get(Drag):
             entity.remove_type(Drag)
+            grab_sound.play()
 
     # Dragging
     for entity in entities_with(entities, Drag):
