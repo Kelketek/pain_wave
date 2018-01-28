@@ -15,6 +15,7 @@ from .violence import Transmitter, PlayerState, Vulnerable
 from .router import update_routers
 from .game_over import EndGameplayOnDeath, update_end_gameplay
 from .facing import Facing
+from .face_toward_movement import update_face_toward_movement
 
 
 # Desired framerate in frames per second. Try out other values.
@@ -110,6 +111,7 @@ class PainWave:
             update_friction(self.entities)
             update_collisions(self.entities)
             update_grapple(self.entities)
+            update_face_toward_movement(self.entities)
 
             # must update screen last to avoid visual latency
             update_screen(self.entities, self.screen)
