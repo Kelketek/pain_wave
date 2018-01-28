@@ -69,4 +69,5 @@ def build_wall():
     entity.add(Movement())
     entity.add(Collision(random() * 10 + 40))
     entity.add(Friction(.9))
+    entity.add(Image('assets/wall.png', entity))
     return entity
