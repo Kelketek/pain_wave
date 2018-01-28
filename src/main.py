@@ -49,12 +49,12 @@ class PainWave:
             joystick.init()
             entity = Entity(name='Player {}'.format(i))
             self.entities.append(entity)
-            position = Position(110, 110 + offset, 12)
+            position = Position(110, 110 + offset, 14)
             entity.add(position)
             entity.add(Movement())
             entity.add(Collision(10))
             entity.add(Friction(.95))
-            entity.add(Image("assets/ball.gif", entity))
+            entity.add(Image('assets/character.png', entity, fixed_rotation=True))
             entity.add(Controller(joystick))
             entity.add(CanGrapple())
             entity.add(PlayerState(team=i % 2))
@@ -64,7 +64,7 @@ class PainWave:
 
     def make_cannon(self, x, y, velocity, offset, angle):
         cannon = Entity(name='Pain Wave Transmitter')
-        position = Position(x, y, 5)
+        position = Position(x, y, 10)
         cannon.add(position)
         transmitter = Transmitter(position, velocity=velocity, offset=offset)
         cannon.add(transmitter)
@@ -80,18 +80,18 @@ class PainWave:
         tetris_god = Entity(name='Dispensor for team {}'.format(team + 1))
         dispenser = Dispenser(team=team, entity=tetris_god)
         tetris_god.add(dispenser)
-        tetris_god.add(Position(x, y, 18))
+        tetris_god.add(Position(x, y, 22))
         tetris_god.add(Timer(DISPENSE_INTERVAL, self.playtime, tasks=[dispenser.dispense]))
         tetris_god.add(Image('assets/dispenser.png', tetris_god))
         self.entities.append(tetris_god)
 
     def init_environment(self):
-        self.init_players()
         offset = 100
         self.make_cannon(0 + offset, self.height / 2, (4, 0), (18, 0), angle=90)
         self.make_cannon(self.width - offset, self.height / 2, (-4, 0), (-18, 0), angle=-90)
         self.make_dispenser(0 + (offset / 2), self.height / 2, 0)
         self.make_dispenser(self.width - (offset / 2), self.height / 2, 1)
+        self.init_players()
 
     def main_loop(self):
         while True:
